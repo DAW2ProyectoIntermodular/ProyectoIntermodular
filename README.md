@@ -5,7 +5,7 @@
 
 > **2º CFGS Desarrollo de Aplicaciones Web (DAW2) — Curso 2026/2027**
 >
-> Proyecto intermodular compuesto por dos productos digitales independientes para el IES Ramón Arcas Meca (Totana, Murcia).
+> Proyecto intermodular compuesto por dos productos digitales independientes para el IES Ramón Arcas Meca (Lorca, Murcia).
 
 ---
 
