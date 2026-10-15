@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Docs — Proyecto Intermodular IES Ramón Arcas Meca</title>
+    <meta name="description" content="Documentación interactiva de las APIs del Proyecto Intermodular: Intranet de Gestión Docente y Web Pública del Centro Educativo">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏫</text></svg>">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Swagger UI -->
+    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css">
+
+    <style>
+        :root {
+            --color-bg: #0a0a0b;
+            --color-surface: #141416;
+            --color-surface-2: #1c1c1f;
+            --color-surface-3: #242428;
+            --color-border: #2a2a2e;
+            --color-text: #e8e8ed;
+            --color-text-secondary: #8e8e93;
+            --color-accent: #6366f1;
+            --color-accent-hover: #818cf8;
+            --color-green: #22c55e;
+            --color-blue: #3b82f6;
+            --color-orange: #f59e0b;
+            --color-red: #ef4444;
+            --color-cyan: #06b6d4;
+            --color-purple: #a855f7;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-2) 100%);
+            border-bottom: 1px solid var(--color-border);
+            padding: 2rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-title .badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            background: var(--color-accent);
+            color: white;
+            letter-spacing: 0.5px;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .header-nav a {
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+        }
+
+        .header-nav a:hover, .header-nav a.active {
+            background: var(--color-surface-3);
+            color: var(--color-text);
+        }
+
+        /* ===== TABS ===== */
+        .tabs-container {
+            max-width: 1400px;
+            margin: 2rem auto 0;
+            padding: 0 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            background: var(--color-surface);
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            background: var(--color-surface-2);
+            color: var(--color-text);
+            border-color: var(--color-surface-3);
+        }
+
+        .tab-btn.active {
+            background: var(--color-accent);
+            color: white;
+            border-color: var(--color-accent);
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* ===== CHEATSHEET ===== */
+        .cheatsheet {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+
+        .cheatsheet-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .api-section {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .api-section-header {
+            padding: 1rem 1.5rem;
+            background: var(--color-surface-2);
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .api-section-header:hover {
+            background: var(--color-surface-3);
+        }
+
+        .api-section-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .api-section-header .count {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            background: var(--color-surface-3);
+            padding: 0.15rem 0.6rem;
+            border-radius: 20px;
+        }
+
+        .api-section-header .chevron {
+            color: var(--color-text-secondary);
+            transition: transform 0.2s;
+        }
+
+        .api-section.collapsed .chevron {
+            transform: rotate(-90deg);
+        }
+
+        .api-section.collapsed .api-section-body {
+            display: none;
+        }
+
+        .api-section-body {
+            padding: 0.5rem;
+        }
+
+        .endpoint-row {
+            display: grid;
+            grid-template-columns: 70px 1fr auto;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.6rem 1rem;
+            border-radius: var(--radius-sm);
+            transition: background 0.15s;
+        }
+
+        .endpoint-row:hover {
+            background: var(--color-surface-2);
+        }
+
+        .method-badge {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .method-GET { background: rgba(34, 197, 94, 0.15); color: var(--color-green); }
+        .method-POST { background: rgba(59, 130, 246, 0.15); color: var(--color-blue); }
+        .method-PUT { background: rgba(245, 158, 11, 0.15); color: var(--color-orange); }
+        .method-PATCH { background: rgba(168, 85, 247, 0.15); color: var(--color-purple); }
+        .method-DELETE { background: rgba(239, 68, 68, 0.15); color: var(--color-red); }
+
+        .endpoint-path {
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: var(--color-text);
+        }
+
+        .endpoint-path .param {
+            color: var(--color-cyan);
+        }
+
+        .endpoint-desc {
+            font-size: 0.78rem;
+            color: var(--color-text-secondary);
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        /* ===== SWAGGER CONTAINER ===== */
+        .swagger-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+
+        .swagger-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .swagger-selector button {
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 0.5rem 1.25rem;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            background: var(--color-surface);
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .swagger-selector button:hover {
+            background: var(--color-surface-2);
+            color: var(--color-text);
+        }
+
+        .swagger-selector button.active {
+            background: var(--color-accent);
+            color: white;
+            border-color: var(--color-accent);
+        }
+
+        #swagger-ui-container {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            min-height: 600px;
+        }
+
+        /* Swagger UI dark theme overrides */
+        .swagger-ui {
+            font-family: var(--font-sans) !important;
+        }
+        .swagger-ui .topbar { display: none !important; }
+        .swagger-ui .info { margin: 20px 0 !important; }
+        .swagger-ui .info .title { color: var(--color-text) !important; font-family: var(--font-sans) !important; }
+        .swagger-ui .info .description p { color: var(--color-text-secondary) !important; }
+        .swagger-ui .scheme-container { background: var(--color-surface-2) !important; border-radius: var(--radius-sm) !important; box-shadow: none !important; }
+        .swagger-ui .opblock-tag { color: var(--color-text) !important; border-bottom-color: var(--color-border) !important; font-family: var(--font-sans) !important; }
+        .swagger-ui .opblock { border-radius: var(--radius-sm) !important; border-color: var(--color-border) !important; background: var(--color-surface) !important; margin-bottom: 0.5rem !important; }
+        .swagger-ui .opblock .opblock-summary { border-color: var(--color-border) !important; }
+        .swagger-ui .opblock .opblock-summary-description { color: var(--color-text-secondary) !important; font-family: var(--font-sans) !important; }
+        .swagger-ui .opblock .opblock-summary-path { color: var(--color-text) !important; font-family: var(--font-mono) !important; }
+        .swagger-ui .opblock-body { background: var(--color-surface-2) !important; }
+        .swagger-ui .opblock-section-header { background: var(--color-surface-3) !important; }
+        .swagger-ui .opblock-section-header h4 { color: var(--color-text) !important; }
+        .swagger-ui .model-box, .swagger-ui section.models { background: var(--color-surface) !important; border-color: var(--color-border) !important; }
+        .swagger-ui .model { color: var(--color-text) !important; }
+        .swagger-ui table thead tr th { color: var(--color-text) !important; border-color: var(--color-border) !important; }
+        .swagger-ui table tbody tr td { color: var(--color-text-secondary) !important; border-color: var(--color-border) !important; }
+        .swagger-ui .btn { border-radius: var(--radius-sm) !important; }
+        .swagger-ui select { background: var(--color-surface-2) !important; color: var(--color-text) !important; border-color: var(--color-border) !important; }
+        .swagger-ui input[type=text] { background: var(--color-surface-2) !important; color: var(--color-text) !important; border-color: var(--color-border) !important; }
+        .swagger-ui textarea { background: var(--color-surface-2) !important; color: var(--color-text) !important; border-color: var(--color-border) !important; }
+        .swagger-ui .response-col_status { color: var(--color-text) !important; }
+        .swagger-ui .response-col_description { color: var(--color-text-secondary) !important; }
+        .swagger-ui .responses-inner h4, .swagger-ui .responses-inner h5 { color: var(--color-text) !important; }
+        .swagger-ui .parameter__name { color: var(--color-text) !important; }
+        .swagger-ui .parameter__type { color: var(--color-text-secondary) !important; }
+        .swagger-ui .model-title { color: var(--color-text) !important; }
+        .swagger-ui section.models h4 { color: var(--color-text) !important; }
+
+        /* ===== STATS BAR ===== */
+        .stats-bar {
+            max-width: 1400px;
+            margin: 0 auto 2rem;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .stat-card .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.78rem;
+            color: var(--color-text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            border-top: 1px solid var(--color-border);
+            padding: 2rem;
+            text-align: center;
+            color: var(--color-text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .footer a {
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; align-items: flex-start; }
+            .header-nav { flex-wrap: wrap; }
+            .tabs { flex-wrap: wrap; }
+            .endpoint-row { grid-template-columns: 60px 1fr; }
+            .endpoint-desc { display: none; }
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1>🏫 Proyecto Intermodular API</h1>
+                <span class="badge">v1.0</span>
+            </div>
+            <nav class="header-nav">
+                <a href="#" class="active" onclick="showView('cheatsheet')">📋 Cheatsheet</a>
+                <a href="#" onclick="showView('swagger')">🔧 Swagger UI</a>
+                <a href="#" onclick="showView('redoc')">📖 Redoc</a>
+                <a href="https://github.com/DAW2ProyectoIntermodular/ProyectoIntermodular" target="_blank">⚡ GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN TABS: Intranet vs Web -->
+    <div class="tabs-container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchProject('intranet')">🔒 Intranet — Gestión Docente</button>
+            <button class="tab-btn" onclick="switchProject('web')">🌐 Web Pública — Centro Educativo</button>
+        </div>
+    </div>
+
+    <!-- STATS BAR -->
+    <div class="stats-bar" id="stats-bar">
+        <!-- Populated by JS -->
+    </div>
+
+    <!-- CHEATSHEET VIEW -->
+    <div id="view-cheatsheet" class="cheatsheet">
+        <div class="cheatsheet-grid" id="cheatsheet-content">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+
+    <!-- SWAGGER VIEW -->
+    <div id="view-swagger" class="swagger-container" style="display: none;">
+        <div class="swagger-selector" id="swagger-api-selector">
+            <button class="active" onclick="loadSwagger('intranet')">🔒 Intranet API</button>
+            <button onclick="loadSwagger('web')">🌐 Web Pública API</button>
+        </div>
+        <div id="swagger-ui-container"></div>
+    </div>
+
+    <!-- REDOC VIEW -->
+    <div id="view-redoc" class="swagger-container" style="display: none;">
+        <div class="swagger-selector" id="redoc-api-selector">
+            <button class="active" onclick="loadRedoc('intranet')">🔒 Intranet API</button>
+            <button onclick="loadRedoc('web')">🌐 Web Pública API</button>
+        </div>
+        <div id="redoc-container" style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); min-height: 600px;"></div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>Proyecto Intermodular — IES Ramón Arcas Meca — 2º DAW 2026/2027</p>
+        <p>José Iver Peñarrieta &amp; Francisco Guerrero · <a href="https://github.com/DAW2ProyectoIntermodular">GitHub</a></p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+    <script>
+        // ===========================
+        // ENDPOINT DATA
+        // ===========================
+        const endpoints = {
+            intranet: [
+                {
+                    section: "🔐 Autenticación",
+                    endpoints: [
+                        { method: "POST", path: "/api/v1/auth/login/google", desc: "Login con Google OAuth2" },
+                        { method: "POST", path: "/api/v1/auth/refresh", desc: "Renovar access token" },
+                        { method: "POST", path: "/api/v1/auth/logout", desc: "Cerrar sesión" },
+                    ]
+                },
+                {
+                    section: "👤 Usuarios",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/usuarios/me", desc: "Mi perfil" },
+                        { method: "PUT", path: "/api/v1/usuarios/me", desc: "Actualizar mi perfil" },
+                        { method: "GET", path: "/api/v1/usuarios", desc: "Listar usuarios (admin)" },
+                        { method: "GET", path: "/api/v1/usuarios/{usuario_id}", desc: "Detalle usuario" },
+                        { method: "POST", path: "/api/v1/usuarios", desc: "Crear usuario (admin)" },
+                        { method: "PUT", path: "/api/v1/usuarios/{usuario_id}", desc: "Actualizar usuario" },
+                        { method: "PATCH", path: "/api/v1/usuarios/{usuario_id}", desc: "Aprobar/cambiar estado" },
+                        { method: "DELETE", path: "/api/v1/usuarios/{usuario_id}", desc: "Eliminar usuario" },
+                        { method: "PUT", path: "/api/v1/usuarios/{usuario_id}/roles", desc: "Asignar roles" },
+                    ]
+                },
+                {
+                    section: "📢 Tablón de Anuncios",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/anuncios", desc: "Listar anuncios" },
+                        { method: "POST", path: "/api/v1/anuncios", desc: "Crear anuncio" },
+                        { method: "GET", path: "/api/v1/anuncios/{anuncio_id}", desc: "Detalle" },
+                        { method: "PUT", path: "/api/v1/anuncios/{anuncio_id}", desc: "Actualizar anuncio" },
+                        { method: "PATCH", path: "/api/v1/anuncios/{anuncio_id}", desc: "Fijar/caducar" },
+                        { method: "DELETE", path: "/api/v1/anuncios/{anuncio_id}", desc: "Eliminar" },
+                    ]
+                },
+                {
+                    section: "🔔 Notificaciones",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/notificaciones", desc: "Mis notificaciones" },
+                        { method: "PATCH", path: "/api/v1/notificaciones/{notificacion_id}", desc: "Marcar como leída" },
+                        { method: "PATCH", path: "/api/v1/notificaciones/leer-todas", desc: "Leer todas" },
+                        { method: "POST", path: "/api/v1/notificaciones/suscripcion-push", desc: "Suscripción push" },
+                        { method: "DELETE", path: "/api/v1/notificaciones/suscripcion-push", desc: "Eliminar suscripción" },
+                    ]
+                },
+                {
+                    section: "📱 Publicaciones RRSS",
+                    endpoints: [
+                        { method: "POST", path: "/api/v1/publicaciones-rrss/generar-texto", desc: "Generar borrador IA" },
+                        { method: "POST", path: "/api/v1/publicaciones-rrss", desc: "Crear solicitud" },
+                        { method: "GET", path: "/api/v1/publicaciones-rrss", desc: "Listar solicitudes" },
+                        { method: "GET", path: "/api/v1/publicaciones-rrss/{publicacion_id}", desc: "Detalle" },
+                        { method: "PATCH", path: "/api/v1/publicaciones-rrss/{publicacion_id}", desc: "Cambiar estado" },
+                    ]
+                },
+                {
+                    section: "🕐 Horarios",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/horarios/me", desc: "Mi horario" },
+                        { method: "GET", path: "/api/v1/horarios/{usuario_id}", desc: "Horario de docente" },
+                        { method: "POST", path: "/api/v1/horarios", desc: "Crear horario (admin)" },
+                        { method: "PUT", path: "/api/v1/horarios/{usuario_id}", desc: "Reemplazar horario" },
+                        { method: "POST", path: "/api/v1/horarios/comparar", desc: "Comparar huecos libres" },
+                    ]
+                },
+                {
+                    section: "🛡️ Guardias",
+                    endpoints: [
+                        { method: "POST", path: "/api/v1/guardias/asignar", desc: "Asignar por rondas" },
+                        { method: "GET", path: "/api/v1/guardias", desc: "Listar guardias" },
+                        { method: "GET", path: "/api/v1/guardias/me", desc: "Mis guardias" },
+                        { method: "GET", path: "/api/v1/guardias/{guardia_id}", desc: "Detalle" },
+                        { method: "PATCH", path: "/api/v1/guardias/{guardia_id}", desc: "Actualizar (cubrir)" },
+                        { method: "GET", path: "/api/v1/guardias/contadores", desc: "Contadores por hueco" },
+                    ]
+                },
+                {
+                    section: "📋 Ausencias",
+                    endpoints: [
+                        { method: "POST", path: "/api/v1/ausencias", desc: "Registrar ausencia" },
+                        { method: "GET", path: "/api/v1/ausencias", desc: "Listar ausencias" },
+                        { method: "GET", path: "/api/v1/ausencias/me", desc: "Mis ausencias" },
+                        { method: "GET", path: "/api/v1/ausencias/{ausencia_id}", desc: "Detalle" },
+                        { method: "PATCH", path: "/api/v1/ausencias/{ausencia_id}", desc: "Justificar/cambiar estado" },
+                        { method: "POST", path: "/api/v1/ausencias/{ausencia_id}/justificante", desc: "Subir justificante" },
+                        { method: "GET", path: "/api/v1/ausencias/{ausencia_id}/pdf", desc: "Obtener PDF" },
+                        { method: "POST", path: "/api/v1/ausencias/{ausencia_id}/firmar", desc: "Firmar PDF" },
+                        { method: "DELETE", path: "/api/v1/ausencias/{ausencia_id}", desc: "Cancelar" },
+                    ]
+                },
+                {
+                    section: "🏫 Aulas y Emplazamiento",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/aulas", desc: "Listar aulas" },
+                        { method: "POST", path: "/api/v1/aulas", desc: "Crear aula" },
+                        { method: "GET", path: "/api/v1/aulas/{aula_id}", desc: "Detalle" },
+                        { method: "PUT", path: "/api/v1/aulas/{aula_id}", desc: "Actualizar" },
+                        { method: "DELETE", path: "/api/v1/aulas/{aula_id}", desc: "Eliminar" },
+                        { method: "GET", path: "/api/v1/aulas/{aula_id}/disposiciones", desc: "Listar layouts" },
+                        { method: "POST", path: "/api/v1/aulas/{aula_id}/disposiciones", desc: "Crear layout" },
+                        { method: "GET", path: "/api/v1/aulas/{aula_id}/disposiciones/{disposicion_id}", desc: "Detalle layout" },
+                        { method: "PUT", path: "/api/v1/aulas/{aula_id}/disposiciones/{disposicion_id}", desc: "Actualizar layout" },
+                        { method: "DELETE", path: "/api/v1/aulas/{aula_id}/disposiciones/{disposicion_id}", desc: "Eliminar layout" },
+                    ]
+                },
+                {
+                    section: "⏰ Retrasos",
+                    endpoints: [
+                        { method: "POST", path: "/api/v1/retrasos", desc: "Registrar retraso" },
+                        { method: "GET", path: "/api/v1/retrasos", desc: "Listar retrasos" },
+                        { method: "GET", path: "/api/v1/retrasos/{retraso_id}", desc: "Detalle" },
+                        { method: "PUT", path: "/api/v1/retrasos/{retraso_id}", desc: "Corregir" },
+                        { method: "DELETE", path: "/api/v1/retrasos/{retraso_id}", desc: "Eliminar" },
+                    ]
+                },
+                {
+                    section: "🤝 Aula de Convivencia",
+                    endpoints: [
+                        { method: "POST", path: "/api/v1/convivencia", desc: "Registrar derivación" },
+                        { method: "GET", path: "/api/v1/convivencia", desc: "Listar derivaciones" },
+                        { method: "GET", path: "/api/v1/convivencia/me", desc: "Mi guardia de convivencia" },
+                        { method: "GET", path: "/api/v1/convivencia/{derivacion_id}", desc: "Detalle" },
+                        { method: "PUT", path: "/api/v1/convivencia/{derivacion_id}", desc: "Actualizar" },
+                        { method: "DELETE", path: "/api/v1/convivencia/{derivacion_id}", desc: "Eliminar" },
+                    ]
+                },
+                {
+                    section: "🎫 Tickets (RMI / Compras / RRSS)",
+                    endpoints: [
+                        { method: "POST", path: "/api/v1/tickets", desc: "Crear ticket" },
+                        { method: "GET", path: "/api/v1/tickets", desc: "Listar tickets" },
+                        { method: "GET", path: "/api/v1/tickets/me", desc: "Mis tickets" },
+                        { method: "GET", path: "/api/v1/tickets/{ticket_id}", desc: "Detalle" },
+                        { method: "PATCH", path: "/api/v1/tickets/{ticket_id}", desc: "Cambiar estado" },
+                        { method: "PUT", path: "/api/v1/tickets/{ticket_id}", desc: "Actualizar completo" },
+                        { method: "DELETE", path: "/api/v1/tickets/{ticket_id}", desc: "Eliminar" },
+                        { method: "POST", path: "/api/v1/tickets/{ticket_id}/adjuntos", desc: "Subir adjunto" },
+                        { method: "GET", path: "/api/v1/tickets/{ticket_id}/adjuntos", desc: "Listar adjuntos" },
+                    ]
+                },
+                {
+                    section: "📁 Documentos",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/documentos", desc: "Listar documentos" },
+                        { method: "POST", path: "/api/v1/documentos", desc: "Subir documento" },
+                        { method: "GET", path: "/api/v1/documentos/{documento_id}", desc: "Detalle/descargar" },
+                        { method: "PUT", path: "/api/v1/documentos/{documento_id}", desc: "Actualizar" },
+                        { method: "DELETE", path: "/api/v1/documentos/{documento_id}", desc: "Eliminar" },
+                    ]
+                },
+                {
+                    section: "📅 Reservas de Espacios y Recursos",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/reservas", desc: "Listar reservas" },
+                        { method: "POST", path: "/api/v1/reservas", desc: "Crear reserva (409 si solapa)" },
+                        { method: "GET", path: "/api/v1/reservas/{reserva_id}", desc: "Detalle" },
+                        { method: "PUT", path: "/api/v1/reservas/{reserva_id}", desc: "Actualizar" },
+                        { method: "DELETE", path: "/api/v1/reservas/{reserva_id}", desc: "Cancelar" },
+                        { method: "GET", path: "/api/v1/espacios", desc: "Listar espacios" },
+                        { method: "POST", path: "/api/v1/espacios", desc: "Crear espacio" },
+                        { method: "GET", path: "/api/v1/recursos", desc: "Listar recursos" },
+                        { method: "POST", path: "/api/v1/recursos", desc: "Crear recurso" },
+                    ]
+                },
+                {
+                    section: "📝 Comisiones de Servicio",
+                    endpoints: [
+                        { method: "POST", path: "/api/v1/comisiones", desc: "Crear solicitud" },
+                        { method: "GET", path: "/api/v1/comisiones", desc: "Listar comisiones" },
+                        { method: "GET", path: "/api/v1/comisiones/me", desc: "Mis comisiones" },
+                        { method: "GET", path: "/api/v1/comisiones/{comision_id}", desc: "Detalle" },
+                        { method: "PATCH", path: "/api/v1/comisiones/{comision_id}", desc: "Cambiar estado" },
+                        { method: "GET", path: "/api/v1/comisiones/{comision_id}/pdf", desc: "Obtener PDF" },
+                        { method: "POST", path: "/api/v1/comisiones/{comision_id}/firmar", desc: "Firmar PDF" },
+                    ]
+                },
+                {
+                    section: "🏭 FEM — Formación en Empresas",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/fem/empresas", desc: "Listar empresas" },
+                        { method: "POST", path: "/api/v1/fem/empresas", desc: "Registrar empresa" },
+                        { method: "GET", path: "/api/v1/fem/empresas/{empresa_id}", desc: "Detalle (+ coords)" },
+                        { method: "PUT", path: "/api/v1/fem/empresas/{empresa_id}", desc: "Actualizar" },
+                        { method: "PATCH", path: "/api/v1/fem/empresas/{empresa_id}", desc: "Activar/desactivar" },
+                        { method: "GET", path: "/api/v1/fem/alumnos", desc: "Listar alumnos FEM" },
+                        { method: "POST", path: "/api/v1/fem/alumnos", desc: "Asignar a empresa" },
+                        { method: "GET", path: "/api/v1/fem/alumnos/{alumno_id}", desc: "Detalle (horas/500h)" },
+                        { method: "PUT", path: "/api/v1/fem/alumnos/{alumno_id}", desc: "Actualizar seguimiento" },
+                        { method: "GET", path: "/api/v1/fem/mapa", desc: "Datos geográficos" },
+                    ]
+                },
+                {
+                    section: "📊 Dashboard Directivo",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/dashboard/kpis", desc: "9 KPIs (dirección)" },
+                        { method: "GET", path: "/api/v1/dashboard/kpis/{kpi_nombre}", desc: "KPI individual" },
+                        { method: "GET", path: "/api/v1/dashboard/configuracion", desc: "Umbrales" },
+                        { method: "PUT", path: "/api/v1/dashboard/configuracion", desc: "Actualizar umbrales" },
+                    ]
+                },
+                {
+                    section: "🔍 Auditoría",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/auditoria", desc: "Listar registros (admin)" },
+                        { method: "GET", path: "/api/v1/auditoria/{registro_id}", desc: "Detalle registro" },
+                    ]
+                },
+                {
+                    section: "🛡️ RGPD",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/rgpd/consentimientos/me", desc: "Mis consentimientos" },
+                        { method: "PUT", path: "/api/v1/rgpd/consentimientos/me", desc: "Actualizar consentimientos" },
+                        { method: "POST", path: "/api/v1/rgpd/solicitudes", desc: "Solicitar derechos" },
+                        { method: "GET", path: "/api/v1/rgpd/solicitudes", desc: "Listar solicitudes" },
+                        { method: "GET", path: "/api/v1/rgpd/solicitudes/{solicitud_id}", desc: "Detalle" },
+                        { method: "PATCH", path: "/api/v1/rgpd/solicitudes/{solicitud_id}", desc: "Resolver" },
+                        { method: "GET", path: "/api/v1/rgpd/accesos-sensibles", desc: "Accesos a menores" },
+                    ]
+                },
+                {
+                    section: "🎓 Onboarding",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/onboarding/pasos", desc: "Guía de primeros pasos" },
+                        { method: "PATCH", path: "/api/v1/onboarding/pasos/{paso_id}", desc: "Marcar completado" },
+                        { method: "GET", path: "/api/v1/onboarding/videos", desc: "Vídeos tutoriales" },
+                        { method: "POST", path: "/api/v1/onboarding/pasos", desc: "Crear paso (admin)" },
+                        { method: "PUT", path: "/api/v1/onboarding/pasos/{paso_id}", desc: "Actualizar paso" },
+                        { method: "POST", path: "/api/v1/onboarding/videos", desc: "Subir vídeo" },
+                    ]
+                },
+                {
+                    section: "🏢 Departamentos",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/departamentos", desc: "Listar departamentos" },
+                        { method: "GET", path: "/api/v1/departamentos/{departamento_id}", desc: "Detalle" },
+                        { method: "POST", path: "/api/v1/departamentos", desc: "Crear (admin)" },
+                        { method: "PUT", path: "/api/v1/departamentos/{departamento_id}", desc: "Actualizar" },
+                    ]
+                },
+                {
+                    section: "📆 Google Calendar",
+                    endpoints: [
+                        { method: "POST", path: "/api/v1/calendario/sincronizar", desc: "Sincronizar con GCal" },
+                        { method: "GET", path: "/api/v1/calendario/eventos", desc: "Eventos sincronizados" },
+                    ]
+                },
+            ],
+            web: [
+                {
+                    section: "🗂️ Navegación y Secciones",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/navegacion/menu", desc: "Árbol del menú" },
+                        { method: "GET", path: "/api/v1/secciones", desc: "Listar secciones" },
+                        { method: "GET", path: "/api/v1/secciones/{seccion_id}", desc: "Detalle por ID" },
+                        { method: "GET", path: "/api/v1/secciones/{slug}", desc: "Detalle por slug" },
+                    ]
+                },
+                {
+                    section: "📰 Noticias",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/noticias", desc: "Listar noticias" },
+                        { method: "GET", path: "/api/v1/noticias/{slug}", desc: "Detalle por slug" },
+                    ]
+                },
+                {
+                    section: "🏢 Departamentos y Programas",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/departamentos", desc: "Listar departamentos" },
+                        { method: "GET", path: "/api/v1/departamentos/{departamento_id}", desc: "Detalle" },
+                        { method: "GET", path: "/api/v1/departamentos/{departamento_id}/programas", desc: "Programas del depto." },
+                        { method: "GET", path: "/api/v1/programas", desc: "Listar programas" },
+                        { method: "GET", path: "/api/v1/programas/{programa_id}", desc: "Detalle programa" },
+                    ]
+                },
+                {
+                    section: "📚 Enseñanzas",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/ensenanzas", desc: "Listar etapas" },
+                        { method: "GET", path: "/api/v1/ensenanzas/{ensenanza_id}", desc: "Detalle" },
+                        { method: "GET", path: "/api/v1/ensenanzas/{ensenanza_id}/materias-optativas", desc: "Optativas" },
+                    ]
+                },
+                {
+                    section: "👥 Personas y Documentos",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/personas", desc: "Listar personas" },
+                        { method: "GET", path: "/api/v1/personas/{persona_id}", desc: "Detalle" },
+                        { method: "GET", path: "/api/v1/documentos", desc: "Listar documentos" },
+                        { method: "GET", path: "/api/v1/documentos/{documento_id}", desc: "Detalle/descargar" },
+                    ]
+                },
+                {
+                    section: "⚙️ Configuración y Contacto",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/configuracion", desc: "Datos del centro" },
+                        { method: "POST", path: "/api/v1/contacto/quejas-sugerencias", desc: "Enviar queja/sugerencia" },
+                    ]
+                },
+                {
+                    section: "🏛️ Secretaría",
+                    endpoints: [
+                        { method: "POST", path: "/api/v1/secretaria/citas", desc: "Solicitar cita previa" },
+                        { method: "POST", path: "/api/v1/secretaria/tramites", desc: "Iniciar trámite" },
+                        { method: "GET", path: "/api/v1/secretaria/citas/{cita_id}/estado", desc: "Estado de cita" },
+                        { method: "GET", path: "/api/v1/secretaria/tramites/{tramite_id}/estado", desc: "Estado de trámite" },
+                    ]
+                },
+                {
+                    section: "🔐 Backoffice — Autenticación",
+                    endpoints: [
+                        { method: "POST", path: "/api/v1/admin/auth/login", desc: "Login admin" },
+                        { method: "POST", path: "/api/v1/admin/auth/logout", desc: "Logout admin" },
+                        { method: "GET", path: "/api/v1/admin/auth/me", desc: "Perfil admin" },
+                    ]
+                },
+                {
+                    section: "📝 Backoffice — Gestión de Contenidos",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/admin/noticias", desc: "Listar (inc. borradores)" },
+                        { method: "POST", path: "/api/v1/admin/noticias", desc: "Crear noticia" },
+                        { method: "PUT", path: "/api/v1/admin/noticias/{noticia_id}", desc: "Actualizar" },
+                        { method: "PATCH", path: "/api/v1/admin/noticias/{noticia_id}", desc: "Publicar/despublicar" },
+                        { method: "DELETE", path: "/api/v1/admin/noticias/{noticia_id}", desc: "Eliminar" },
+                        { method: "POST", path: "/api/v1/admin/documentos", desc: "Subir documento" },
+                        { method: "PUT", path: "/api/v1/admin/documentos/{documento_id}", desc: "Actualizar doc." },
+                        { method: "DELETE", path: "/api/v1/admin/documentos/{documento_id}", desc: "Eliminar doc." },
+                        { method: "POST", path: "/api/v1/admin/secciones", desc: "Crear sección" },
+                        { method: "PUT", path: "/api/v1/admin/secciones/{seccion_id}", desc: "Actualizar sección" },
+                        { method: "PATCH", path: "/api/v1/admin/secciones/{seccion_id}", desc: "Mostrar/ocultar" },
+                        { method: "DELETE", path: "/api/v1/admin/secciones/{seccion_id}", desc: "Eliminar sección" },
+                    ]
+                },
+                {
+                    section: "👤 Backoffice — Personas y Deptos.",
+                    endpoints: [
+                        { method: "POST", path: "/api/v1/admin/personas", desc: "Crear persona" },
+                        { method: "PUT", path: "/api/v1/admin/personas/{persona_id}", desc: "Actualizar" },
+                        { method: "DELETE", path: "/api/v1/admin/personas/{persona_id}", desc: "Eliminar" },
+                        { method: "POST", path: "/api/v1/admin/departamentos", desc: "Crear departamento" },
+                        { method: "PUT", path: "/api/v1/admin/departamentos/{departamento_id}", desc: "Actualizar" },
+                        { method: "DELETE", path: "/api/v1/admin/departamentos/{departamento_id}", desc: "Eliminar" },
+                        { method: "POST", path: "/api/v1/admin/programas", desc: "Crear programa" },
+                        { method: "PUT", path: "/api/v1/admin/programas/{programa_id}", desc: "Actualizar" },
+                        { method: "DELETE", path: "/api/v1/admin/programas/{programa_id}", desc: "Eliminar" },
+                        { method: "PUT", path: "/api/v1/admin/programas/{programa_id}/departamentos", desc: "Asignar deptos. (N:M)" },
+                    ]
+                },
+                {
+                    section: "📋 Backoffice — Secretaría y Config.",
+                    endpoints: [
+                        { method: "GET", path: "/api/v1/admin/secretaria/solicitudes", desc: "Listar solicitudes" },
+                        { method: "GET", path: "/api/v1/admin/secretaria/solicitudes/{solicitud_id}", desc: "Detalle" },
+                        { method: "PATCH", path: "/api/v1/admin/secretaria/solicitudes/{solicitud_id}", desc: "Cambiar estado" },
+                        { method: "GET", path: "/api/v1/admin/configuracion", desc: "Obtener config" },
+                        { method: "PUT", path: "/api/v1/admin/configuracion", desc: "Actualizar config" },
+                        { method: "POST", path: "/api/v1/admin/ensenanzas", desc: "Crear enseñanza" },
+                        { method: "PUT", path: "/api/v1/admin/ensenanzas/{ensenanza_id}", desc: "Actualizar" },
+                        { method: "DELETE", path: "/api/v1/admin/ensenanzas/{ensenanza_id}", desc: "Eliminar" },
+                    ]
+                },
+            ]
+        };
+
+        // ===========================
+        // RENDERING
+        // ===========================
+        let currentProject = 'intranet';
+        let currentView = 'cheatsheet';
+        let swaggerUI = null;
+
+        function switchProject(project) {
+            currentProject = project;
+            document.querySelectorAll('.tabs .tab-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', (project === 'intranet' ? i === 0 : i === 1));
+            });
+            renderCheatsheet();
+            renderStats();
+        }
+
+        function showView(view) {
+            currentView = view;
+            document.querySelectorAll('.header-nav a').forEach(a => a.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.getElementById('view-cheatsheet').style.display = view === 'cheatsheet' ? '' : 'none';
+            document.getElementById('view-swagger').style.display = view === 'swagger' ? '' : 'none';
+            document.getElementById('view-redoc').style.display = view === 'redoc' ? '' : 'none';
+
+            if (view === 'swagger') loadSwagger(currentProject);
+            if (view === 'redoc') loadRedoc(currentProject);
+        }
+
+        function renderStats() {
+            const data = endpoints[currentProject];
+            const totalEndpoints = data.reduce((sum, s) => sum + s.endpoints.length, 0);
+            const methods = {};
+            data.forEach(s => s.endpoints.forEach(e => {
+                methods[e.method] = (methods[e.method] || 0) + 1;
+            }));
+
+            document.getElementById('stats-bar').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-number">${totalEndpoints}</div>
+                    <div class="stat-label">Endpoints totales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${data.length}</div>
+                    <div class="stat-label">Módulos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${methods['GET'] || 0}</div>
+                    <div class="stat-label">GET</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${methods['POST'] || 0}</div>
+                    <div class="stat-label">POST</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${(methods['PUT'] || 0) + (methods['PATCH'] || 0)}</div>
+                    <div class="stat-label">PUT / PATCH</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${methods['DELETE'] || 0}</div>
+                    <div class="stat-label">DELETE</div>
+                </div>
+            `;
+        }
+
+        function renderCheatsheet() {
+            const data = endpoints[currentProject];
+            let html = '';
+            data.forEach(section => {
+                const pathsHTML = section.endpoints.map(e => {
+                    const pathFormatted = e.path.replace(/\{([^}]+)\}/g, '<span class="param">{$1}</span>');
+                    return `<div class="endpoint-row">
+                        <span class="method-badge method-${e.method}">${e.method}</span>
+                        <span class="endpoint-path">${pathFormatted}</span>
+                        <span class="endpoint-desc">${e.desc}</span>
+                    </div>`;
+                }).join('');
+
+                html += `<div class="api-section">
+                    <div class="api-section-header" onclick="this.parentElement.classList.toggle('collapsed')">
+                        <h3>${section.section}</h3>
+                        <span class="count">${section.endpoints.length} endpoints</span>
+                        <span class="chevron">▼</span>
+                    </div>
+                    <div class="api-section-body">${pathsHTML}</div>
+                </div>`;
+            });
+            document.getElementById('cheatsheet-content').innerHTML = html;
+        }
+
+        function getSpecUrl(project) {
+            // Try relative path first (for GitHub Pages), fallback to raw GitHub URL
+            const basePath = window.location.pathname.replace(/\/[^/]*$/, '');
+            const localPath = project === 'intranet'
+                ? `${basePath}/../api/openapi-intranet.yaml`
+                : `${basePath}/../api/openapi-web.yaml`;
+
+            return project === 'intranet'
+                ? 'https://raw.githubusercontent.com/DAW2ProyectoIntermodular/ProyectoIntermodular/main/docs/api/openapi-intranet.yaml'
+                : 'https://raw.githubusercontent.com/DAW2ProyectoIntermodular/ProyectoIntermodular/main/docs/api/openapi-web.yaml';
+        }
+
+        function loadSwagger(project) {
+            document.querySelectorAll('#swagger-api-selector button').forEach((btn, i) => {
+                btn.classList.toggle('active', (project === 'intranet' ? i === 0 : i === 1));
+            });
+
+            if (swaggerUI) {
+                swaggerUI = null;
+                document.getElementById('swagger-ui-container').innerHTML = '';
+            }
+
+            swaggerUI = SwaggerUIBundle({
+                url: getSpecUrl(project),
+                dom_id: '#swagger-ui-container',
+                deepLinking: true,
+                presets: [SwaggerUIBundle.presets.apis, SwaggerUIBundle.SwaggerUIStandalonePreset],
+                layout: "BaseLayout",
+                defaultModelsExpandDepth: 1,
+                defaultModelExpandDepth: 2,
+                docExpansion: "list",
+            });
+        }
+
+        function loadRedoc(project) {
+            document.querySelectorAll('#redoc-api-selector button').forEach((btn, i) => {
+                btn.classList.toggle('active', (project === 'intranet' ? i === 0 : i === 1));
+            });
+
+            const container = document.getElementById('redoc-container');
+            container.innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--color-text-secondary);">Cargando documentación Redoc...</div>';
+
+            // Load Redoc dynamically
+            if (!window.Redoc) {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js';
+                script.onload = () => initRedoc(project);
+                document.body.appendChild(script);
+            } else {
+                initRedoc(project);
+            }
+        }
+
+        function initRedoc(project) {
+            const container = document.getElementById('redoc-container');
+            container.innerHTML = '';
+            Redoc.init(getSpecUrl(project), {
+                theme: {
+                    colors: { primary: { main: '#6366f1' } },
+                    typography: { fontFamily: 'Inter, sans-serif', code: { fontFamily: 'JetBrains Mono, monospace' } },
+                    sidebar: { backgroundColor: '#141416', textColor: '#e8e8ed' },
+                    rightPanel: { backgroundColor: '#1c1c1f' },
+                },
+                scrollYOffset: 80,
+                hideDownloadButton: false,
+            }, container);
+        }
+
+        // Init
+        renderCheatsheet();
+        renderStats();
+    </script>
+</body>
+</html>
