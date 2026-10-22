@@ -1,0 +1,52 @@
+name: Validación OpenAPI (CI)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/api/**'
+      - '.github/workflows/lint-openapi.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/api/**'
+
+jobs:
+  validate-specs:
+    name: Validar Contratos OpenAPI 3.1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar validador oficial de OpenAPI
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml openapi-spec-validator
+
+      - name: Validar openapi-intranet.yaml
+        run: |
+          python -c "
+          import yaml
+          from openapi_spec_validator import validate
+          with open('docs/api/openapi-intranet.yaml', 'r', encoding='utf-8') as f:
+              spec = yaml.safe_load(f)
+          validate(spec)
+          print('✅ openapi-intranet.yaml: Válido al 100%')
+          "
+
+      - name: Validar openapi-web.yaml
+        run: |
+          python -c "
+          import yaml
+          from openapi_spec_validator import validate
+          with open('docs/api/openapi-web.yaml', 'r', encoding='utf-8') as f:
+              spec = yaml.safe_load(f)
+          validate(spec)
+          print('✅ openapi-web.yaml: Válido al 100%')
+          "
