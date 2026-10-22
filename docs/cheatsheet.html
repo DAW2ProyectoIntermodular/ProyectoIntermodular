@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoja Resumen de Endpoints (Cheatsheet) — IES Ramón Arcas Meca</title>
+    <style>
+        @page {
+            size: A3 landscape;
+            margin: 8mm;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-size: 7.2pt;
+            line-height: 1.25;
+            color: #1a1a2e;
+            background: #fff;
+        }
+
+        .page {
+            page-break-after: always;
+            padding: 6mm;
+        }
+
+        .page:last-child { page-break-after: avoid; }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #6366f1;
+            padding-bottom: 4px;
+            margin-bottom: 6px;
+        }
+
+        .page-header h1 {
+            font-size: 13pt;
+            font-weight: 800;
+            color: #4338ca;
+        }
+
+        .page-header .subtitle {
+            font-size: 7.5pt;
+            color: #555;
+        }
+
+        .page-header .meta {
+            text-align: right;
+            font-size: 6.8pt;
+            color: #666;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .section {
+            border: 1px solid #dcdce4;
+            border-radius: 4px;
+            overflow: hidden;
+            break-inside: avoid;
+            background: #fafafc;
+        }
+
+        .section-header {
+            background: #edeefc;
+            padding: 3px 6px;
+            font-weight: 700;
+            font-size: 7.2pt;
+            color: #3730a3;
+            border-bottom: 1px solid #dcdce4;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header .count {
+            font-size: 6pt;
+            font-weight: 600;
+            color: #555;
+            background: #fff;
+            padding: 1px 4px;
+            border-radius: 6px;
+            border: 1px solid #dcdce4;
+        }
+
+        .endpoint {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 5px;
+            border-bottom: 1px solid #f0f0f4;
+            background: #fff;
+        }
+
+        .endpoint:last-child { border-bottom: none; }
+
+        .method {
+            font-family: 'Consolas', 'Fira Code', monospace;
+            font-size: 5.8pt;
+            font-weight: 700;
+            padding: 1px 3px;
+            border-radius: 2px;
+            min-width: 34px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .GET    { background: #dcfce7; color: #166534; }
+        .POST   { background: #dbeafe; color: #1e40af; }
+        .PUT    { background: #fef3c7; color: #92400e; }
+        .PATCH  { background: #f3e8ff; color: #7c3aed; }
+        .DELETE { background: #fee2e2; color: #991b1b; }
+
+        .path {
+            font-family: 'Consolas', 'Fira Code', monospace;
+            font-size: 6.2pt;
+            color: #222;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .path .param {
+            color: #0284c7;
+            font-weight: 600;
+        }
+
+        .desc {
+            font-size: 5.8pt;
+            color: #666;
+            white-space: nowrap;
+            flex-shrink: 0;
+            background: #f4f4f8;
+            padding: 0 3px;
+            border-radius: 2px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 6px;
+            padding-top: 5px;
+            border-top: 1px solid #dcdce4;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 6.3pt;
+        }
+
+        .legend-method {
+            font-family: 'Consolas', monospace;
+            font-size: 5.8pt;
+            font-weight: 700;
+            padding: 1px 4px;
+            border-radius: 2px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 6px;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 2px 8px;
+            background: #f8f8fc;
+            border: 1px solid #e2e2e8;
+            border-radius: 4px;
+            min-width: 60px;
+        }
+
+        .stat-number {
+            font-size: 11pt;
+            font-weight: 800;
+            color: #4f46e5;
+            line-height: 1.1;
+        }
+
+        .stat-label {
+            font-size: 5.5pt;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .conventions {
+            background: #f5f6ff;
+            border: 1px solid #dbe0fe;
+            border-radius: 4px;
+            padding: 4px 8px;
+            margin-bottom: 6px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            font-size: 6.2pt;
+        }
+
+        .conventions h4 {
+            font-size: 6.8pt;
+            color: #3730a3;
+            margin-bottom: 1px;
+        }
+
+        .conventions code {
+            background: #e0e7ff;
+            padding: 0 2px;
+            border-radius: 2px;
+            font-family: 'Consolas', monospace;
+            font-size: 5.8pt;
+            color: #1e1b4b;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 5.8pt;
+            color: #888;
+            margin-top: 5px;
+            padding-top: 3px;
+            border-top: 1px solid #eee;
+        }
+
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .no-print { display: none !important; }
+        }
+
+        .print-btn-bar {
+            background: #1e1b4b;
+            color: #fff;
+            padding: 6px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 8pt;
+        }
+
+        .print-btn-bar a, .print-btn-bar button {
+            background: #4f46e5;
+            color: #fff;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 7.5pt;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .print-btn-bar button:hover, .print-btn-bar a:hover {
+            background: #6366f1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="print-btn-bar no-print">
+    <span>🏫 <strong>IES Ramón Arcas Meca</strong> — Hoja de Referencia Rápida de Endpoints (DAW2 - 2026/2027)</span>
+    <div style="display: flex; gap: 8px;">
+        <a href="index.html">← Volver al Portal Interactivo</a>
+        <button onclick="window.print()">🖨️ Imprimir / Guardar en PDF (A3 Horizontal)</button>
+    </div>
+</div>
+
+<!-- ============================================================== -->
+<!-- PÁGINA 1: INTRANET DE GESTIÓN DOCENTE (76 ENDPOINTS)           -->
+<!-- ============================================================== -->
+<div class="page">
+    <div class="page-header">
+        <div>
+            <h1>🔒 API Intranet — Gestión Docente</h1>
+            <span class="subtitle">IES Ramón Arcas Meca (Totana) · CFGS DAW2 · Curso 2026/2027 · Proyecto 1 (Privado / Transaccional)</span>
+        </div>
+        <div class="meta">
+            FastAPI · MongoDB · Redis · JWT Bearer + Google OAuth2<br>
+            Roles: <code>profesor</code> · <code>administrador</code> · <code>jefatura_estudios</code> · <code>secretaria</code> · <code>responsable_rmi</code> · <code>admin_rrss</code> · <code>direccion</code><br>
+            <strong>76 endpoints · 22 módulos operativos</strong>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat"><div class="stat-number">76</div><div class="stat-label">Total Endpoints</div></div>
+        <div class="stat"><div class="stat-number">22</div><div class="stat-label">Módulos</div></div>
+        <div class="stat"><div class="stat-number">30</div><div class="stat-label">GET (Consultas)</div></div>
+        <div class="stat"><div class="stat-number">24</div><div class="stat-label">POST (Creación/Acción)</div></div>
+        <div class="stat"><div class="stat-number">11</div><div class="stat-label">PUT (Sustitución)</div></div>
+        <div class="stat"><div class="stat-number">13</div><div class="stat-label">PATCH (Estados)</div></div>
+        <div class="stat"><div class="stat-number">10</div><div class="stat-label">DELETE (Borrado)</div></div>
+    </div>
+
+    <div class="conventions">
+        <div>
+            <h4>Convenciones REST Obligatorias</h4>
+            Prefijo <code>/api/v1/</code> · Sustantivos en plural, minúsculas en español · Subrecursos de acción: <code>POST /guardias/asignar</code>
+        </div>
+        <div>
+            <h4>Paginación Canónica</h4>
+            Query params: <code>?page=1&amp;limit=10</code> (máx 50) · Respuesta: <code>{"items":[...],"page":1,"limit":10,"total":N}</code>
+        </div>
+        <div>
+            <h4>Códigos y Formato de Error</h4>
+            200 OK · 201 Created (con <code>Location</code>) · 204 No Content · 401 · 403 · 404 · 409 Conflict · 422 · Error: <code>{"detail":"..."}</code>
+        </div>
+    </div>
+
+    <div class="grid">
+        <!-- 1. Autenticación -->
+        <div class="section">
+            <div class="section-header">🔐 1. Autenticación <span class="count">3</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/auth/login/google</span><span class="desc">Login OAuth</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/auth/refresh</span><span class="desc">Renovar JWT</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/auth/logout</span><span class="desc">Cerrar sesión</span></div>
+        </div>
+
+        <!-- 2. Usuarios -->
+        <div class="section">
+            <div class="section-header">👤 2. Usuarios y Claustro <span class="count">9</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/usuarios/me</span><span class="desc">Perfil propio</span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/usuarios/me</span><span class="desc">Editar propio</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/usuarios</span><span class="desc">Listar claustro</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/usuarios/<span class="param">{usuario_id}</span></span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/usuarios</span><span class="desc">Alta manual</span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/usuarios/<span class="param">{usuario_id}</span></span></div>
+            <div class="endpoint"><span class="method PATCH">PATCH</span><span class="path">/api/v1/usuarios/<span class="param">{usuario_id}</span></span><span class="desc">Aprobar alta</span></div>
+            <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/usuarios/<span class="param">{usuario_id}</span></span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/usuarios/<span class="param">{usuario_id}</span>/roles</span></div>
+        </div>
+
+        <!-- 3. Departamentos -->
+        <div class="section">
+            <div class="section-header">🏢 3. Departamentos <span class="count">4</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/departamentos</span><span class="desc">Listar deptos</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/departamentos/<span class="param">{departamento_id}</span></span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/departamentos</span><span class="desc">Crear depto</span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/departamentos/<span class="param">{departamento_id}</span></span></div>
+        </div>
+
+        <!-- 4. Tablón de Anuncios -->
+        <div class="section">
+            <div class="section-header">📢 4. Tablón de Anuncios <span class="count">6</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/anuncios</span><span class="desc">Feed segmentado</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/anuncios</span><span class="desc">Publicar aviso</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/anuncios/<span class="param">{anuncio_id}</span></span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/anuncios/<span class="param">{anuncio_id}</span></span></div>
+            <div class="endpoint"><span class="method PATCH">PATCH</span><span class="path">/api/v1/anuncios/<span class="param">{anuncio_id}</span></span><span class="desc">Fijar/Caducar</span></div>
+            <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/anuncios/<span class="param">{anuncio_id}</span></span></div>
+        </div>
+
+        <!-- 5. Notificaciones -->
+        <div class="section">
+            <div class="section-header">🔔 5. Notificaciones (Push/Email) <span class="count">5</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/notificaciones</span><span class="desc">Bandeja avisos</span></div>
+            <div class="endpoint"><span class="method PATCH">PATCH</span><span class="path">/api/v1/notificaciones/<span class="param">{notificacion_id}</span></span></div>
+            <div class="endpoint"><span class="method PATCH">PATCH</span><span class="path">/api/v1/notificaciones/leer-todas</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/notificaciones/suscripcion-push</span></div>
+            <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/notificaciones/suscripcion-push</span></div>
+        </div>
+
+        <!-- 6. RRSS con IA -->
+        <div class="section">
+            <div class="section-header">📱 6. Publicaciones RRSS + IA <span class="count">5</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/publicaciones-rrss/generar-texto</span><span class="desc">Prompt IA</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/publicaciones-rrss</span><span class="desc">Crear solicitud</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/publicaciones-rrss</span><span class="desc">Cola solicitudes</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/publicaciones-rrss/<span class="param">{publicacion_id}</span></span></div>
+            <div class="endpoint"><span class="method PATCH">PATCH</span><span class="path">/api/v1/publicaciones-rrss/<span class="param">{publicacion_id}</span></span></div>
+        </div>
+
+        <!-- 7. Horarios -->
+        <div class="section">
+            <div class="section-header">🕐 7. Horarios y Reuniones <span class="count">5</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/horarios/me</span><span class="desc">Mi horario</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/horarios/<span class="param">{usuario_id}</span></span><span class="desc">Ver horario</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/horarios</span><span class="desc">Asignar bloques</span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/horarios/<span class="param">{usuario_id}</span></span><span class="desc">Sustituir</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/horarios/comparar</span><span class="desc">Intersección libres</span></div>
+        </div>
+
+        <!-- 8. Guardias -->
+        <div class="section">
+            <div class="section-header">🛡️ 8. Guardias por Rondas <span class="count">6</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/guardias/asignar</span><span class="desc">Algoritmo rondas</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/guardias</span><span class="desc">Listar guardia</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/guardias/me</span><span class="desc">Mis guardias</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/guardias/<span class="param">{guardia_id}</span></span></div>
+            <div class="endpoint"><span class="method PATCH">PATCH</span><span class="path">/api/v1/guardias/<span class="param">{guardia_id}</span></span><span class="desc">Quien realiza</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/guardias/contadores</span><span class="desc">Contador hueco</span></div>
+        </div>
+
+        <!-- 9. Ausencias y Firma -->
+        <div class="section">
+            <div class="section-header">📋 9. Flujo Ausencias y Firma <span class="count">9</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/ausencias</span><span class="desc">Declarar falta</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/ausencias</span><span class="desc">Histórico ausencias</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/ausencias/me</span><span class="desc">Mis ausencias</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/ausencias/<span class="param">{ausencia_id}</span></span></div>
+            <div class="endpoint"><span class="method PATCH">PATCH</span><span class="path">/api/v1/ausencias/<span class="param">{ausencia_id}</span></span><span class="desc">Justificar</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/ausencias/<span class="param">{ausencia_id}</span>/justificante</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/ausencias/<span class="param">{ausencia_id}</span>/pdf</span><span class="desc">WeasyPrint</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/ausencias/<span class="param">{ausencia_id}</span>/firmar</span><span class="desc">Firma canvas</span></div>
+            <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/ausencias/<span class="param">{ausencia_id}</span></span></div>
+        </div>
+
+        <!-- 10. Aulas y Layouts -->
+        <div class="section">
+            <div class="section-header">🏫 10. Aulas y Emplazamiento <span class="count">10</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/aulas</span><span class="desc">Listar aulas</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/aulas</span><span class="desc">Alta aula</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/aulas/<span class="param">{aula_id}</span></span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/aulas/<span class="param">{aula_id}</span></span></div>
+            <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/aulas/<span class="param">{aula_id}</span></span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/aulas/<span class="param">{aula_id}</span>/disposiciones</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/aulas/<span class="param">{aula_id}</span>/disposiciones</span><span class="desc">Layout pupitres</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/aulas/<span class="param">{aula_id}</span>/disposiciones/<span class="param">{disposicion_id}</span></span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/aulas/<span class="param">{aula_id}</span>/disposiciones/<span class="param">{disposicion_id}</span></span></div>
+            <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/aulas/<span class="param">{aula_id}</span>/disposiciones/<span class="param">{disposicion_id}</span></span></div>
+        </div>
+
+        <!-- 11. Retrasos -->
+        <div class="section">
+            <div class="section-header">⏰ 11. Retrasos de Alumnos <span class="count">5</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/retrasos</span><span class="desc">Apuntar retraso</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/retrasos</span><span class="desc">Histórico alumno</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/retrasos/<span class="param">{retraso_id}</span></span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/retrasos/<span class="param">{retraso_id}</span></span></div>
+            <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/retrasos/<span class="param">{retraso_id}</span></span></div>
+        </div>
+
+        <!-- 12. Convivencia -->
+        <div class="section">
+            <div class="section-header">🤝 12. Aula de Convivencia <span class="count">6</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/convivencia</span><span class="desc">Derivación jefatura</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/convivencia</span><span class="desc">Listar derivados</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/convivencia/me</span><span class="desc">Docente guardia</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/convivencia/<span class="param">{derivacion_id}</span></span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/convivencia/<span class="param">{derivacion_id}</span></span></div>
+            <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/convivencia/<span class="param">{derivacion_id}</span></span></div>
+        </div>
+
+        <!-- 13. Tickets -->
+        <div class="section">
+            <div class="section-header">🎫 13. Entidad Tickets (RMI/Compras) <span class="count">9</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/tickets</span><span class="desc">Crear ticket</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/tickets</span><span class="desc">Bandeja tickets</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/tickets/me</span><span class="desc">Mis peticiones</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/tickets/<span class="param">{ticket_id}</span></span></div>
+            <div class="endpoint"><span class="method PATCH">PATCH</span><span class="path">/api/v1/tickets/<span class="param">{ticket_id}</span></span><span class="desc">Cambiar estado</span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/tickets/<span class="param">{ticket_id}</span></span></div>
+            <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/tickets/<span class="param">{ticket_id}</span></span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/tickets/<span class="param">{ticket_id}</span>/adjuntos</span><span class="desc">Subir factura/foto</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/tickets/<span class="param">{ticket_id}</span>/adjuntos</span></div>
+        </div>
+
+        <!-- 14. Documentos -->
+        <div class="section">
+            <div class="section-header">📁 14. Repositorio Documental <span class="count">5</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/documentos</span><span class="desc">Filtrar por depto</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/documentos</span><span class="desc">Subir doc</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/documentos/<span class="param">{documento_id}</span></span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/documentos/<span class="param">{documento_id}</span></span></div>
+            <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/documentos/<span class="param">{documento_id}</span></span></div>
+        </div>
+
+        <!-- 15. Reservas -->
+        <div class="section">
+            <div class="section-header">📅 15. Reservas de Recursos <span class="count">9</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/reservas</span><span class="desc">Calendario</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/reservas</span><span class="desc">409 solapamiento</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/reservas/<span class="param">{reserva_id}</span></span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/reservas/<span class="param">{reserva_id}</span></span></div>
+            <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/reservas/<span class="param">{reserva_id}</span></span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/espacios</span><span class="desc">Aulas TIC/Salón</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/espacios</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/recursos</span><span class="desc">Carros portátiles</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/recursos</span></div>
+        </div>
+
+        <!-- 16. Comisiones -->
+        <div class="section">
+            <div class="section-header">📝 16. Comisiones de Servicio <span class="count">7</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/comisiones</span><span class="desc">Solicitar comisión</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/comisiones</span><span class="desc">Listar solicitudes</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/comisiones/me</span><span class="desc">Mis comisiones</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/comisiones/<span class="param">{comision_id}</span></span></div>
+            <div class="endpoint"><span class="method PATCH">PATCH</span><span class="path">/api/v1/comisiones/<span class="param">{comision_id}</span></span><span class="desc">Aprobar/rechazar</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/comisiones/<span class="param">{comision_id}</span>/pdf</span><span class="desc">PDF oficial</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/comisiones/<span class="param">{comision_id}</span>/firmar</span><span class="desc">Firma digital</span></div>
+        </div>
+
+        <!-- 17. FEM -->
+        <div class="section">
+            <div class="section-header">🏭 17. Seguimiento FEM (500h) <span class="count">10</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/fem/empresas</span><span class="desc">Directorio empresas</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/fem/empresas</span><span class="desc">Alta + Nominatim</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/fem/empresas/<span class="param">{empresa_id}</span></span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/fem/empresas/<span class="param">{empresa_id}</span></span></div>
+            <div class="endpoint"><span class="method PATCH">PATCH</span><span class="path">/api/v1/fem/empresas/<span class="param">{empresa_id}</span></span><span class="desc">Activar/Inactivar</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/fem/alumnos</span><span class="desc">Alumnado en FEM</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/fem/alumnos</span><span class="desc">Asignar plaza</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/fem/alumnos/<span class="param">{alumno_id}</span></span><span class="desc">% sobre 500h</span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/fem/alumnos/<span class="param">{alumno_id}</span></span><span class="desc">Anotar tutoría</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/fem/mapa</span><span class="desc">Capa Leaflet/OSM</span></div>
+        </div>
+
+        <!-- 18. Dashboard -->
+        <div class="section">
+            <div class="section-header">📊 18. Dashboard Directivo (9 KPIs) <span class="count">4</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/dashboard/kpis</span><span class="desc">Consolidado 9 KPIs</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/dashboard/kpis/<span class="param">{kpi_nombre}</span></span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/dashboard/configuracion</span><span class="desc">Umbrales activos</span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/dashboard/configuracion</span><span class="desc">Umbral retrasos</span></div>
+        </div>
+
+        <!-- 19. Auditoría -->
+        <div class="section">
+            <div class="section-header">🔍 19. Auditoría de Seguridad <span class="count">2</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/auditoria</span><span class="desc">Trazabilidad total</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/auditoria/<span class="param">{registro_id}</span></span></div>
+        </div>
+
+        <!-- 20. RGPD -->
+        <div class="section">
+            <div class="section-header">🛡️ 20. RGPD y Menores <span class="count">7</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/rgpd/consentimientos/me</span><span class="desc">Mis consentim.</span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/rgpd/consentimientos/me</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/rgpd/solicitudes</span><span class="desc">Derecho ARCO</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/rgpd/solicitudes</span><span class="desc">Cola DPO</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/rgpd/solicitudes/<span class="param">{solicitud_id}</span></span></div>
+            <div class="endpoint"><span class="method PATCH">PATCH</span><span class="path">/api/v1/rgpd/solicitudes/<span class="param">{solicitud_id}</span></span><span class="desc">Resolver</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/rgpd/accesos-sensibles</span><span class="desc">Log menores</span></div>
+        </div>
+
+        <!-- 21. Onboarding -->
+        <div class="section">
+            <div class="section-header">🎓 21. Onboarding Docente <span class="count">6</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/onboarding/pasos</span><span class="desc">Guía bienvenida</span></div>
+            <div class="endpoint"><span class="method PATCH">PATCH</span><span class="path">/api/v1/onboarding/pasos/<span class="param">{paso_id}</span></span><span class="desc">Completar paso</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/onboarding/videos</span><span class="desc">Píldoras vídeo</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/onboarding/pasos</span><span class="desc">Crear paso</span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/onboarding/pasos/<span class="param">{paso_id}</span></span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/onboarding/videos</span><span class="desc">Subir tutorial</span></div>
+        </div>
+
+        <!-- 22. Google Calendar -->
+        <div class="section">
+            <div class="section-header">📆 22. Google Calendar Sync <span class="count">2</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/calendario/sincronizar</span><span class="desc">Sincronizar</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/calendario/eventos</span><span class="desc">Eventos centro</span></div>
+        </div>
+    </div>
+
+    <div class="legend">
+        <div class="legend-item"><span class="legend-method GET">GET</span> Consultar</div>
+        <div class="legend-item"><span class="legend-method POST">POST</span> Crear / Disparar Acción</div>
+        <div class="legend-item"><span class="legend-method PUT">PUT</span> Sustituir Completo</div>
+        <div class="legend-item"><span class="legend-method PATCH">PATCH</span> Modificación Parcial / Estados</div>
+        <div class="legend-item"><span class="legend-method DELETE">DELETE</span> Eliminar (204)</div>
+        <div class="legend-item" style="color: #4f46e5; font-weight: 600;">Control por Roles: <code>Depends(requerir_rol(...))</code></div>
+    </div>
+
+    <div class="footer">
+        Proyecto Intermodular DAW2 — IES Ramón Arcas Meca (Totana) — José Iver Peñarrieta & Francisco Guerrero — Entrega 1 (30 de octubre)
+    </div>
+</div>
+
+<!-- ============================================================== -->
+<!-- PÁGINA 2: WEB PÚBLICA + BACKOFFICE (48 ENDPOINTS)              -->
+<!-- ============================================================== -->
+<div class="page">
+    <div class="page-header">
+        <div>
+            <h1>🌐 API Web Pública y Backoffice de Gestión</h1>
+            <span class="subtitle">IES Ramón Arcas Meca (Totana) · CFGS DAW2 · Curso 2026/2027 · Proyecto 2 (Público + Backoffice PHP Puro)</span>
+        </div>
+        <div class="meta">
+            PHP Puro (Sin Framework) · MySQL/MariaDB (3FN) · HTML5/TS<br>
+            Público: Sin Autenticación · Backoffice: Sesión con Cookie <code>PHPSESSID</code><br>
+            <strong>48 endpoints · 22 módulos (22 Públicos + 26 Backoffice)</strong>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat"><div class="stat-number">48</div><div class="stat-label">Total Endpoints</div></div>
+        <div class="stat"><div class="stat-number">22</div><div class="stat-label">Endpoints Públicos</div></div>
+        <div class="stat"><div class="stat-number">26</div><div class="stat-label">Endpoints Backoffice</div></div>
+        <div class="stat"><div class="stat-number">26</div><div class="stat-label">GET</div></div>
+        <div class="stat"><div class="stat-number">10</div><div class="stat-label">POST</div></div>
+        <div class="stat"><div class="stat-number">6</div><div class="stat-label">PUT</div></div>
+        <div class="stat"><div class="stat-number">4</div><div class="stat-label">PATCH</div></div>
+        <div class="stat"><div class="stat-number">6</div><div class="stat-label">DELETE</div></div>
+    </div>
+
+    <div class="conventions">
+        <div>
+            <h4>Arquitectura Relacional (3FN)</h4>
+            MySQL puro normalizado · Integridad referencial FK · Relación N:M <code>departamentos_programas</code> con sincronización mediante <code>PUT</code>
+        </div>
+        <div>
+            <h4>SEO y Accesibilidad Web</h4>
+            URLs amigables con <code>slug</code> · <code>sitemap.xml</code> dinámico en raíz · Cumplimiento de pautas de accesibilidad <strong>WCAG 2.1 AA</strong>
+        </div>
+        <div>
+            <h4>Sesiones Nativas vs Tokens</h4>
+            Descartado JWT para este producto · API de administración protegida exclusivamente mediante sesión PHP con cookie <code>PHPSESSID</code>
+        </div>
+    </div>
+
+    <div class="grid grid-3">
+        <!-- P1. Navegación -->
+        <div class="section">
+            <div class="section-header">🗂️ 1. Navegación Jerárquica <span class="count">4</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/navegacion/menu</span><span class="desc">Árbol con padre_id</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/secciones</span><span class="desc">Páginas activas</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/secciones/<span class="param">{seccion_id}</span></span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/secciones/<span class="param">{slug}</span></span><span class="desc">URL amigable</span></div>
+        </div>
+
+        <!-- P2. Noticias -->
+        <div class="section">
+            <div class="section-header">📰 2. Blog de Noticias <span class="count">2</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/noticias</span><span class="desc">Feed noticias</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/noticias/<span class="param">{slug}</span></span><span class="desc">Lectura por slug</span></div>
+        </div>
+
+        <!-- P3. Departamentos y Programas -->
+        <div class="section">
+            <div class="section-header">🏢 3. Deptos. y Programas <span class="count">5</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/departamentos</span><span class="desc">Listar depts</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/departamentos/<span class="param">{departamento_id}</span></span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/departamentos/<span class="param">{departamento_id}</span>/programas</span><span class="desc">Relación N:M</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/programas</span><span class="desc">20+ proyectos</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/programas/<span class="param">{programa_id}</span></span></div>
+        </div>
+
+        <!-- P4. Enseñanzas -->
+        <div class="section">
+            <div class="section-header">📚 4. Oferta de Enseñanzas <span class="count">3</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/ensenanzas</span><span class="desc">ESO, Bach, FP</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/ensenanzas/<span class="param">{ensenanza_id}</span></span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/ensenanzas/<span class="param">{ensenanza_id}</span>/materias-optativas</span><span class="desc">Optativas</span></div>
+        </div>
+
+        <!-- P5. Directorio de Personas -->
+        <div class="section">
+            <div class="section-header">👥 5. Personas y Órganos <span class="count">2</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/personas</span><span class="desc">Directiva/Claustro/Consejo</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/personas/<span class="param">{persona_id}</span></span></div>
+        </div>
+
+        <!-- P6. Documentos Públicos -->
+        <div class="section">
+            <div class="section-header">📄 6. Repositorio Público <span class="count">2</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/documentos</span><span class="desc">Descargas familias</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/documentos/<span class="param">{documento_id}</span></span></div>
+        </div>
+
+        <!-- P7. Configuración y Contacto -->
+        <div class="section">
+            <div class="section-header">⚙️ 7. Datos Centro y Buzón <span class="count">2</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/configuracion</span><span class="desc">Totana/Contacto/RRSS</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/contacto/quejas-sugerencias</span><span class="desc">Buzón público</span></div>
+        </div>
+
+        <!-- P8. Secretaría Pública -->
+        <div class="section">
+            <div class="section-header">🏛️ 8. Trámites de Secretaría <span class="count">4</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/secretaria/citas</span><span class="desc">Pedir cita</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/secretaria/tramites</span><span class="desc">Matrícula/Certif.</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/secretaria/citas/<span class="param">{cita_id}</span>/estado</span><span class="desc">Consultar cita</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/secretaria/tramites/<span class="param">{tramite_id}</span>/estado</span><span class="desc">Estado trámite</span></div>
+        </div>
+
+        <!-- P9. SEO Dinámico -->
+        <div class="section">
+            <div class="section-header">🗺️ 9. Sitemap XML (SEO) <span class="count">1</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/sitemap.xml</span><span class="desc">Indexación buscadores</span></div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- BACKOFFICE PRIVADO (SESIÓN CON PHPSESSID)      -->
+        <!-- ============================================== -->
+
+        <!-- B1. Auth Backoffice -->
+        <div class="section">
+            <div class="section-header">🔐 10. Admin: Sesión Backoffice <span class="count">3</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/admin/auth/login</span><span class="desc">Set-Cookie PHPSESSID</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/admin/auth/logout</span><span class="desc">Destruir sesión</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/auth/me</span><span class="desc">Admin activo</span></div>
+        </div>
+
+        <!-- B2. Admin Noticias -->
+        <div class="section">
+            <div class="section-header">📝 11. Admin: Noticias (Borradores) <span class="count">5</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/noticias</span><span class="desc">Incluye borradores</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/admin/noticias</span><span class="desc">Redactar noticia</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/noticias/<span class="param">{noticia_id}</span></span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/admin/noticias/<span class="param">{noticia_id}</span></span></div>
+            <div class="endpoint"><span class="method PATCH">PATCH</span><span class="path">/api/v1/admin/noticias/<span class="param">{noticia_id}</span></span><span class="desc">Publicar/Borrador</span></div>
+            <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/admin/noticias/<span class="param">{noticia_id}</span></span></div>
+        </div>
+
+        <!-- B3. Admin Documentos -->
+        <div class="section">
+            <div class="section-header">📄 12. Admin: Documentos <span class="count">4</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/documentos</span><span class="desc">Gestión archivos</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/admin/documentos</span><span class="desc">Subir archivo</span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/admin/documentos/<span class="param">{documento_id}</span></span></div>
+            <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/admin/documentos/<span class="param">{documento_id}</span></span></div>
+        </div>
+
+        <!-- B4. Admin Secciones -->
+        <div class="section">
+            <div class="section-header">🗂️ 13. Admin: Estructura del Menú <span class="count">5</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/secciones</span><span class="desc">Árbol completo</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/admin/secciones</span><span class="desc">Nueva sección</span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/admin/secciones/<span class="param">{seccion_id}</span></span></div>
+            <div class="endpoint"><span class="method PATCH">PATCH</span><span class="path">/api/v1/admin/secciones/<span class="param">{seccion_id}</span></span><span class="desc">Mostrar/Ocultar</span></div>
+            <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/admin/secciones/<span class="param">{seccion_id}</span></span></div>
+        </div>
+
+        <!-- B5. Admin Personas -->
+        <div class="section">
+            <div class="section-header">👤 14. Admin: Claustro y Directiva <span class="count">4</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/personas</span><span class="desc">Listar todo</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/admin/personas</span><span class="desc">Alta miembro</span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/admin/personas/<span class="param">{persona_id}</span></span></div>
+            <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/admin/personas/<span class="param">{persona_id}</span></span></div>
+        </div>
+
+        <!-- B6. Admin Departamentos -->
+        <div class="section">
+            <div class="section-header">🏢 15. Admin: Departamentos <span class="count">3</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/admin/departamentos</span><span class="desc">Crear depto</span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/admin/departamentos/<span class="param">{departamento_id}</span></span></div>
+            <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/admin/departamentos/<span class="param">{departamento_id}</span></span></div>
+        </div>
+
+        <!-- B7. Admin Programas -->
+        <div class="section">
+            <div class="section-header">🎯 16. Admin: Programas (N:M) <span class="count">4</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/admin/programas</span><span class="desc">Nuevo programa</span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/admin/programas/<span class="param">{programa_id}</span></span></div>
+            <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/admin/programas/<span class="param">{programa_id}</span></span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/admin/programas/<span class="param">{programa_id}</span>/departamentos</span><span class="desc">Sync N:M</span></div>
+        </div>
+
+        <!-- B8. Admin Enseñanzas y Optativas -->
+        <div class="section">
+            <div class="section-header">📚 17. Admin: Enseñanzas y Optativas <span class="count">7</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/admin/ensenanzas</span><span class="desc">Nueva etapa</span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/admin/ensenanzas/<span class="param">{ensenanza_id}</span></span></div>
+            <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/admin/ensenanzas/<span class="param">{ensenanza_id}</span></span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/ensenanzas/<span class="param">{ensenanza_id}</span>/materias-optativas</span></div>
+            <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/admin/ensenanzas/<span class="param">{ensenanza_id}</span>/materias-optativas</span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/admin/ensenanzas/<span class="param">{ensenanza_id}</span>/materias-optativas/<span class="param">{materia_id}</span></span></div>
+            <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/admin/ensenanzas/<span class="param">{ensenanza_id}</span>/materias-optativas/<span class="param">{materia_id}</span></span></div>
+        </div>
+
+        <!-- B9. Admin Secretaría -->
+        <div class="section">
+            <div class="section-header">🏛️ 18. Admin: Gestión de Trámites <span class="count">3</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/secretaria/solicitudes</span><span class="desc">Cola trámites</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/secretaria/solicitudes/<span class="param">{solicitud_id}</span></span></div>
+            <div class="endpoint"><span class="method PATCH">PATCH</span><span class="path">/api/v1/admin/secretaria/solicitudes/<span class="param">{solicitud_id}</span></span><span class="desc">Estado trámite</span></div>
+        </div>
+
+        <!-- B10. Admin Configuración -->
+        <div class="section">
+            <div class="section-header">⚙️ 19. Admin: Parámetros del Centro <span class="count">2</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/configuracion</span><span class="desc">Ver clave-valor</span></div>
+            <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/admin/configuracion</span><span class="desc">Editar contacto</span></div>
+        </div>
+    </div>
+
+    <div class="legend">
+        <div class="legend-item"><span class="legend-method GET">GET</span> Consultar</div>
+        <div class="legend-item"><span class="legend-method POST">POST</span> Crear</div>
+        <div class="legend-item"><span class="legend-method PUT">PUT</span> Sustituir / Relación N:M</div>
+        <div class="legend-item"><span class="legend-method PATCH">PATCH</span> Estado Parcial</div>
+        <div class="legend-item"><span class="legend-method DELETE">DELETE</span> Eliminar (204)</div>
+        <div class="legend-item" style="color: #4338ca; font-weight: 600;">Autenticación Backoffice: Sesión PHP Nativa (<code>PHPSESSID</code>)</div>
+    </div>
+
+    <div class="footer">
+        Proyecto Intermodular DAW2 — IES Ramón Arcas Meca (Totana) — José Iver Peñarrieta & Francisco Guerrero — Entrega 1 (30 de octubre)
+    </div>
+</div>
+
+</body>
+</html>
