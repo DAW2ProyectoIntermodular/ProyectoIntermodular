@@ -132,7 +132,7 @@ docker-compose up -d
 | Integrante | Usuario GitHub | Correo Oficial | Rol Principal |
 |---|---|---|---|
 | **José Iver Peñarrieta** | [@joseiverp](https://github.com/joseiverp) | `14499483@alu.murciaeduca.es` | Co-Arquitecto / Full-Stack |
-| **Francisco Guerrero** | [@FranKisekis](https://github.com/FranKisekis) | `3728291@alu.murciaeduca.es` | Co-Arquitecto / Full-Stack |
+| **Francisco Guerrero** | [@FranGuerreroH](https://github.com/FranGuerreroH) | `3728291@alu.murciaeduca.es` | Co-Arquitecto / Full-Stack |
 
 ---
 
