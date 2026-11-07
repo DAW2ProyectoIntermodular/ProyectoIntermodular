@@ -4,7 +4,7 @@ info:
   summary: API REST para la gestión integral académica, operativa y administrativa
     del centro docente.
   description: "## Especificación OpenAPI 3.1 - Intranet de Gestión Docente\n**Centro:**\
-    \ IES Ramón Arcas Meca (Totana, Murcia)  \n**Ciclo Formativo:** 2º CFGS Desarrollo\
+    \ IES Ramón Arcas Meca (Lorca, Murcia)  \n**Ciclo Formativo:** 2º CFGS Desarrollo\
     \ de Aplicaciones Web (DAW2) - Curso 2026/2027  \n**Proyecto:** Proyecto Intermodular\
     \ - Producto 1 (Intranet Privada de Gestión Docente)\n\n### Arquitectura del Sistema\n\
     - **Backend:** FastAPI (Python 3.11+) con arquitectura limpia modular.\n- **Base\
@@ -5219,8 +5219,10 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorDetalle'
-          example:
-            detail: Token de autenticación ausente o inválido.
+          examples:
+            ejemplo:
+              value:
+                detail: Token de autenticación ausente o inválido.
     Respuesta403:
       description: Prohibido. El rol o permisos del usuario no le autorizan para ejecutar
         esta acción.
@@ -5228,8 +5230,10 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorDetalle'
-          example:
-            detail: No dispone de los permisos necesarios para realizar esta acción.
+          examples:
+            ejemplo:
+              value:
+                detail: No dispone de los permisos necesarios para realizar esta acción.
     Respuesta404:
       description: Recurso no encontrado. El identificador proporcionado no existe
         en la base de datos.
@@ -5237,8 +5241,10 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorDetalle'
-          example:
-            detail: El recurso solicitado no fue encontrado.
+          examples:
+            ejemplo:
+              value:
+                detail: El recurso solicitado no fue encontrado.
     Respuesta409:
       description: Conflicto de estado. Inconsistencia, solapamiento horario o transición
         de estado no permitida.
@@ -5246,8 +5252,10 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorDetalle'
-          example:
-            detail: Conflicto con el estado actual del recurso.
+          examples:
+            ejemplo:
+              value:
+                detail: Conflicto con el estado actual del recurso.
     Respuesta422:
       description: Entidad no procesable. Error de validación en los parámetros o
         cuerpo de la petición (Pydantic).
@@ -6099,7 +6107,7 @@ components:
           examples:
           - 🛡️ ¡Gran jornada de Ciberseguridad en el IES Ramón Arcas Meca! Hoy nuestros
             estudiantes de 2º DAW profundizaron en técnicas de hacking ético y defensa
-            activa junto a especialistas de INCIBE. El talento digital de Totana sigue
+            activa junto a especialistas de INCIBE. El talento digital de Lorca sigue
             formándose con los mejores estándares. 💻✨
         hashtags_sugeridos:
           type: array
@@ -6110,7 +6118,7 @@ components:
             - '#DAW2'
             - '#Ciberseguridad'
             - '#IESRamonArcas'
-            - '#Totana'
+            - '#Lorca'
         longitud_caracteres:
           type: integer
           examples:
@@ -8285,7 +8293,7 @@ components:
         itinerario:
           type: string
           examples:
-          - Totana - Murcia - Totana (104 km ida y vuelta)
+          - Lorca - Murcia - Lorca (142 km ida y vuelta)
         importe_estimado:
           type: number
           examples:
@@ -8357,7 +8365,7 @@ components:
         itinerario:
           type: string
           examples:
-          - Totana - Murcia - Totana
+          - Lorca - Murcia - Lorca
         importe_estimado:
           type: number
           examples:

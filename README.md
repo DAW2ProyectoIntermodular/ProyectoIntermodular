@@ -1,141 +1,137 @@
-# 🏫 Proyecto Intermodular — IES Ramón Arcas Meca
+# 🏫 Plataforma Digital — IES Ramón Arcas Meca
 
 [![Validación OpenAPI](https://github.com/DAW2ProyectoIntermodular/ProyectoIntermodular/actions/workflows/lint-openapi.yml/badge.svg)](https://github.com/DAW2ProyectoIntermodular/ProyectoIntermodular/actions/workflows/lint-openapi.yml)
 [![API Docs](https://img.shields.io/badge/API_Docs-GitHub_Pages-blue?logo=swagger)](https://daw2proyectointermodular.github.io/ProyectoIntermodular/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+[![License: MIT](https://img.shields.io/badge/Licencia-MIT-green.svg)](./LICENSE)
 
-> **2º CFGS Desarrollo de Aplicaciones Web (DAW2) — Curso 2026/2027**
->
-> Proyecto intermodular compuesto por dos productos digitales independientes para el **IES Ramón Arcas Meca** (Lorca, Murcia).
+Proyecto desarrollado para el **IES Ramón Arcas Meca** (Lorca, Murcia) en el marco del segundo curso del **CFGS Desarrollo de Aplicaciones Web (DAW)**, curso académico 2026/2027.
+
+La plataforma se compone de dos productos digitales desacoplados e independientes: una **intranet privada transaccional** para la operativa diaria del profesorado y equipo directivo, y un **portal web institucional accesible** para toda la comunidad educativa.
 
 ---
 
 ## 📦 Productos Digitales
 
 ### 1. Intranet de Gestión Docente (Privada y Transaccional)
-Plataforma transaccional para la operativa interna del profesorado y equipo directivo: comunicación, horarios, asignación de guardias por rondas, ausencias con firma manuscrita/digital, tickets RMI/compras, seguimiento FEM (500h) con mapas Leaflet y dashboard directivo (9 KPIs).
 
-| Capa | Tecnología |
-|------|-----------|
-| Backend | Python · FastAPI (v1) · JWT (Access + Refresh) |
-| Bases de Datos | MongoDB (almacén persistente NoSQL) + Redis (caché y sesiones) |
-| Frontend | React · TypeScript · PWA (Escritorio estilo sidebar / Móvil estilo iOS) |
-| Generación Documental | WeasyPrint / ReportLab + Pillow (firma manuscrita en canvas) |
-| Tests | pytest (cobertura en autenticación, RBAC y algoritmo de guardias) |
+Herramienta interna enfocada en agilizar y transparentar las gestiones cotidianas del centro escolar:
+- Algoritmo de asignación equitativa de guardias lectivas por rondas y tramos horarios.
+- Registro y justificación de ausencias con captura de firma manuscrita digital.
+- Comunicación interna, reservas de espacios compartidos y tablón de anuncios.
+- Gestión de incidencias técnicas (RMI), compras y seguimiento de FCT/FEM con mapas Leaflet.
+- Panel de control para el equipo directivo con indicadores clave de funcionamiento.
 
-### 2. Web Pública del Centro Educativo
-Portal institucional para familias, alumnado y comunidad educativa con backoffice administrativo privado para gestión editorial sin frameworks.
-
-| Capa | Tecnología |
-|------|-----------|
-| Backend | PHP puro (sin framework) · API REST en `/api/v1` |
-| Autenticación Admin | Sesión nativa con cookie segura (`PHPSESSID`) |
-| Base de Datos | MySQL / MariaDB (normalizada en 3FN, claves foráneas, relaciones N:M) |
-| Frontend | HTML5 · CSS moderno minimalista · TypeScript |
-| SEO y Accesibilidad | URLs amigables (`slug`) · `sitemap.xml` dinámico · Pautas WCAG 2.1 AA |
+| Capa | Tecnologías |
+|---|---|
+| **Backend** | Python 3.12 · FastAPI (asíncrono) · Autenticación JWT y Google OAuth2 · RBAC |
+| **Bases de Datos** | MongoDB (almacenamiento documental) + Redis (caché y denylist de tokens) |
+| **Frontend** | React 18 · TypeScript · PWA (interfaz de escritorio con menú lateral y móvil estilo app nativa) |
+| **Documentación y Reportes** | WeasyPrint / ReportLab para partes oficiales y exportaciones en PDF |
+| **Pruebas** | pytest (cobertura en lógica de guardias, permisos y autenticación) |
 
 ---
 
-## 📊 Especificación de Endpoints (1ª Entrega — 30 de octubre)
+### 2. Portal Web Institucional (Público y Accesible)
 
-Total de **124 endpoints** definidos bajo especificación formal **OpenAPI 3.1**, validados al 100% sin advertencias y cumpliendo estrictamente la guía de estilo REST:
+Portal oficial del centro educativo enfocado a familias, alumnado y entorno social, con un panel de administración privado para secretaría y redacción de novedades:
+- Catálogo de enseñanzas formativas (ESO, Bachillerato, Ciclos Formativos de FP).
+- Publicación de noticias, convocatorias, eventos y proyectos del centro.
+- Sección de secretaría virtual con trámites telemáticos y descarga de impresos.
+- Directorio de departamentos didácticos y contacto directo.
+- Cumplimiento de directivas de accesibilidad para la administración pública (WCAG 2.1 nivel AA).
 
-* **Rutas en español y sustantivos en plural:** `/api/v1/guardias`, `/api/v1/noticias`, `/api/v1/usuarios`, etc.
-* **Paginación estándar:** `?page=1&limit=10` con envoltorio `{"items": [...], "page": 1, "limit": 10, "total": N}`.
-* **Semántica HTTP:** `POST` (201 Created con cabecera `Location`), `PUT` (reemplazo completo), `PATCH` (estados/parcial), `DELETE` (204 No Content).
-* **Gestión canónica de errores:** Formato canónico `{"detail": "..."}` en todos los códigos HTTP.
+| Capa | Tecnologías |
+|---|---|
+| **Backend** | PHP 8.3 puro (sin frameworks externos) · API REST bajo `/api/v1` |
+| **Autenticación Panel** | Sesiones nativas de PHP con cookie de seguridad (`PHPSESSID`) |
+| **Base de Datos** | MySQL / MariaDB normalizada en Tercera Forma Normal (3FN) con claves foráneas |
+| **Frontend** | HTML5 semántico · CSS moderno minimalista · TypeScript |
+| **SEO y Rendimiento** | Enlaces legibles (`slugs`), sitemap dinámico y marcado de accesibilidad ARIA |
 
-| Producto | Archivo OpenAPI | Endpoints | Módulos | Documentación Interactiva |
+---
+
+## 📊 Especificación de Endpoints (OpenAPI 3.1)
+
+El proyecto cuenta con una especificación formal de **124 endpoints** descritos bajo el estándar **OpenAPI 3.1**, validados sin advertencias mediante `openapi-spec-validator` y siguiendo una convención REST coherente:
+
+- **Convención de rutas:** Recursos en plural y en español (`/api/v1/guardias`, `/api/v1/noticias`, `/api/v1/departamentos`).
+- **Paginación uniforme:** Parámetros `?page=1&limit=10` con formato estándar `{ "items": [...], "page": 1, "limit": 10, "total": N }`.
+- **Códigos de estado:** `200 OK`, `201 Created` con cabecera `Location`, `204 No Content` para eliminaciones, y respuestas detalladas de error `{ "detail": "..." }`.
+
+| Sistema | Archivo de Especificación | Rutas | Módulos | Visor Interactivo |
 |---|---|---|---|---|
-| **Intranet Docente** | [`docs/api/openapi-intranet.yaml`](./docs/api/openapi-intranet.yaml) | **76** | 22 | [Ver en Swagger UI](https://daw2proyectointermodular.github.io/ProyectoIntermodular/) |
-| **Web Pública** | [`docs/api/openapi-web.yaml`](./docs/api/openapi-web.yaml) | **48** | 22 | [Ver en Redoc](https://daw2proyectointermodular.github.io/ProyectoIntermodular/) |
-| **Hoja Resumen A3** | [`docs/cheatsheet.html`](./docs/cheatsheet.html) | **124** | 44 | [Ver Hoja Visual Cheatsheet](https://daw2proyectointermodular.github.io/ProyectoIntermodular/cheatsheet.html) |
+| **Intranet Docente** | [`docs/api/openapi-intranet.yaml`](./docs/api/openapi-intranet.yaml) | **76** | 22 | [Swagger UI](https://daw2proyectointermodular.github.io/ProyectoIntermodular/) |
+| **Web Pública** | [`docs/api/openapi-web.yaml`](./docs/api/openapi-web.yaml) | **48** | 22 | [Redoc](https://daw2proyectointermodular.github.io/ProyectoIntermodular/) |
+| **Hoja Resumen A3** | [`docs/cheatsheet.html`](./docs/cheatsheet.html) | **124** | 44 | [Cheatsheet A3](https://daw2proyectointermodular.github.io/ProyectoIntermodular/cheatsheet.html) |
 
 ---
 
-## 📁 Estructura del Repositorio
+## 📁 Estructura del Proyecto
 
-```
-├── intranet/                    # Proyecto 1: Intranet de Gestión Docente
-│   ├── backend/                 # FastAPI + Python
+```text
+├── intranet/                     # Módulo privado transaccional
+│   ├── backend/                  # API en FastAPI (Python)
 │   │   ├── app/
-│   │   │   ├── api/v1/          # Endpoints versionados
-│   │   │   ├── core/            # Configuración, seguridad JWT, RBAC
-│   │   │   ├── models/          # Modelos ODM MongoDB
-│   │   │   ├── schemas/         # Pydantic schemas
-│   │   │   ├── services/        # Lógica de negocio (guardias, etc.)
-│   │   │   └── utils/           # Generación de PDFs y firmas
-│   │   ├── tests/               # Tests con pytest
-│   │   ├── requirements.txt
-│   │   └── Dockerfile
-│   └── frontend/                # React + TypeScript PWA
+│   │   │   ├── api/v1/           # Endpoints versionados
+│   │   │   ├── core/             # Configuración, seguridad y permisos
+│   │   │   ├── models/           # Modelos de datos (MongoDB)
+│   │   │   ├── schemas/          # Esquemas de validación Pydantic
+│   │   │   ├── services/         # Lógica de guardias, ausencias y gestión
+│   │   │   └── utils/            # Generación documental y firmas
+│   │   └── tests/                # Pruebas automatizadas con pytest
+│   └── frontend/                 # Aplicación cliente React + TypeScript (PWA)
 │       ├── src/
-│       ├── public/
-│       ├── package.json
-│       └── Dockerfile
-├── web-publica/                 # Proyecto 2: Web Pública del Centro
-│   ├── backend/                 # PHP puro (sin framework)
-│   │   ├── api/v1/              # Endpoints REST públicos y admin
-│   │   ├── admin/               # Backoffice (sesión PHPSESSID)
-│   │   ├── config/              # Conexión PDO a MySQL
-│   │   ├── models/              # DAO / Repositorios (3FN)
-│   │   └── public/              # Punto de entrada
-│   ├── frontend/                # HTML5 + CSS + TypeScript
-│   │   ├── src/
-│   │   └── assets/
-│   ├── database/                # Esquemas y migraciones SQL
-│   └── Dockerfile
-├── docs/                        # Documentación Oficial
-│   ├── api/                     # Contratos OpenAPI 3.1
+│       └── public/
+├── web-publica/                  # Módulo público institucional
+│   ├── backend/                  # API y lógica en PHP nativo
+│   │   ├── api/v1/               # Endpoints REST públicos
+│   │   ├── admin/                # Backoffice editorial
+│   │   ├── config/               # Conexión PDO a base de datos
+│   │   └── models/               # Repositorios y entidades SQL
+│   ├── frontend/                 # Vistas HTML5, hojas de estilo y scripts TS
+│   └── database/                 # Esquemas relacionales y migraciones SQL
+├── docs/                         # Documentación técnica
+│   ├── api/                      # Contratos OpenAPI 3.1
 │   │   ├── openapi-intranet.yaml
 │   │   └── openapi-web.yaml
-│   ├── CONTEXTO_OFICIAL_PROYECTO.md
-│   ├── ESTADO_ACTUAL_Y_CONTINUACION.md
-│   ├── index.html               # Portal interactivo (Swagger UI + Redoc)
-│   └── cheatsheet.html          # Hoja visual imprimible A3 / PDF
-├── .github/workflows/           # CI/CD (GitHub Actions)
-│   ├── deploy-docs.yml          # Despliegue automático a GitHub Pages
-│   └── lint-openapi.yml         # Validación continua de contratos OpenAPI
-├── docker-compose.yml           # Orquestación de contenedores
-├── .env.example                 # Variables de entorno de plantilla
+│   ├── index.html                # Portal interactivo (Swagger UI y Redoc)
+│   └── cheatsheet.html           # Hoja visual resumida para consulta e impresión
+├── .github/workflows/            # Automatización e integración continua
+│   ├── deploy-docs.yml           # Despliegue del portal a GitHub Pages
+│   └── lint-openapi.yml          # Validación continua de contratos OpenAPI
+├── docker-compose.yml            # Orquestación de servicios en contenedores
 ├── .gitignore
-├── LICENSE                      # Licencia MIT
+├── LICENSE                       # Licencia MIT en español
 └── README.md
 ```
 
 ---
 
-## 🚀 Inicio Rápido
+## 🚀 Consulta de la Documentación
+
+Toda la documentación técnica de las APIs está desplegada y disponible para su consulta interactiva:
+
+* **Portal de Documentación API:** [daw2proyectointermodular.github.io/ProyectoIntermodular](https://daw2proyectointermodular.github.io/ProyectoIntermodular/)
+* **Hoja Resumen A3 (Imprimible):** [Cheatsheet de Endpoints](https://daw2proyectointermodular.github.io/ProyectoIntermodular/cheatsheet.html)
+
+Para consultar la especificación en local, basta con clonar el repositorio y abrir `docs/index.html` en cualquier navegador web:
 
 ```bash
-# 1. Clonar el repositorio
 git clone https://github.com/DAW2ProyectoIntermodular/ProyectoIntermodular.git
 cd ProyectoIntermodular
-
-# 2. Configurar variables de entorno
-cp .env.example .env
-
-# 3. Levantar servicios con Docker
-docker-compose up -d
-
-# 4. Enlaces de acceso
-# Intranet PWA:      http://localhost:3000
-# Intranet API:      http://localhost:8000/api/v1
-# Web Pública:       http://localhost:8080
-# Documentación API: https://daw2proyectointermodular.github.io/ProyectoIntermodular/
 ```
 
 ---
 
-## 👥 Equipo y Distribución del Trabajo (50 / 50)
+## 👥 Equipo de Desarrollo
 
-| Integrante | Usuario GitHub | Correo Oficial | Rol Principal |
-|---|---|---|---|
-| **José Iver Peñarrieta** | [@joseiverp](https://github.com/joseiverp) | `14499483@alu.murciaeduca.es` | Co-Arquitecto / Full-Stack |
-| **Francisco Guerrero** | [@FranGuerreroH](https://github.com/FranGuerreroH) | `3728291@alu.murciaeduca.es` | Co-Arquitecto / Full-Stack |
+* **José Iver Peñarrieta** — [@joseiverp](https://github.com/joseiverp) (`14499483@alu.murciaeduca.es`)
+* **Francisco Guerrero** — [@FranGuerreroH](https://github.com/FranGuerreroH) (`3728291@alu.murciaeduca.es`)
+
+Centro Educativo: **IES Ramón Arcas Meca**, Lorca (Región de Murcia).
 
 ---
 
 ## 📄 Licencia
 
-Este proyecto se distribuye bajo la licencia **[MIT](./LICENSE)** como software libre para el ámbito educativo.
+Este proyecto se distribuye bajo los términos de la **[Licencia MIT](./LICENSE)** en español.

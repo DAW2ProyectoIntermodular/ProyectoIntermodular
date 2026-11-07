@@ -3,7 +3,7 @@ info:
   title: API Web Pública y Backoffice - IES Ramón Arcas Meca
   description: "Especificación OpenAPI 3.1 oficial para la **Web Pública del Centro\
     \ Educativo** y su **Backoffice de Administración** del **IES Ramón Arcas Meca**\
-    \ (Totana, Región de Murcia).\n\n### Principios Arquitectónicos y Convenciones\
+    \ (Lorca, Región de Murcia).\n\n### Principios Arquitectónicos y Convenciones\
     \ REST\n- **Backend:** PHP nativo sin framework (descartado Laravel), base de\
     \ datos relacional MySQL / MariaDB normalizada en 3FN mínimo con integridad referencial\
     \ (claves foráneas) y relaciones N:M.\n- **Autenticación:**\n  - **API Pública:**\
@@ -183,7 +183,8 @@ paths:
           todas las secciones de primer y segundo nivel.
         schema:
           type: integer
-        example: 1
+          examples:
+          - 1
       - $ref: '#/components/parameters/PageParam'
       - $ref: '#/components/parameters/LimitParam'
       responses:
@@ -193,33 +194,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedSecciones'
-              example:
-                items:
-                - seccion_id: 2
-                  padre_id: 1
-                  titulo: Equipo Directivo
-                  slug: equipo-directivo
-                  orden: 1
-                  visible: true
-                  contenido_html: <p>Conoce a los miembros del equipo directivo del
-                    IES Ramón Arcas Meca.</p>
-                  enlace_externo: null
-                  creado_en: '2026-09-01T08:00:00Z'
-                  actualizado_en: '2026-09-10T11:30:00Z'
-                - seccion_id: 3
-                  padre_id: 1
-                  titulo: Consejo Escolar
-                  slug: consejo-escolar
-                  orden: 2
-                  visible: true
-                  contenido_html: <p>Composición y funciones del Consejo Escolar durante
-                    el curso 2026/2027.</p>
-                  enlace_externo: null
-                  creado_en: '2026-09-01T08:00:00Z'
-                  actualizado_en: '2026-09-15T09:20:00Z'
-                page: 1
-                limit: 10
-                total: 18
+              examples:
+                ejemplo:
+                  value:
+                    items:
+                    - seccion_id: 2
+                      padre_id: 1
+                      titulo: Equipo Directivo
+                      slug: equipo-directivo
+                      orden: 1
+                      visible: true
+                      contenido_html: <p>Conoce a los miembros del equipo directivo
+                        del IES Ramón Arcas Meca.</p>
+                      enlace_externo: null
+                      creado_en: '2026-09-01T08:00:00Z'
+                      actualizado_en: '2026-09-10T11:30:00Z'
+                    - seccion_id: 3
+                      padre_id: 1
+                      titulo: Consejo Escolar
+                      slug: consejo-escolar
+                      orden: 2
+                      visible: true
+                      contenido_html: <p>Composición y funciones del Consejo Escolar
+                        durante el curso 2026/2027.</p>
+                      enlace_externo: null
+                      creado_en: '2026-09-01T08:00:00Z'
+                      actualizado_en: '2026-09-15T09:20:00Z'
+                    page: 1
+                    limit: 10
+                    total: 18
         '422':
           $ref: '#/components/responses/Error422'
   /api/v1/secciones/{seccion_id}:
@@ -237,7 +240,8 @@ paths:
         description: Identificador único numérico de la sección.
         schema:
           type: integer
-        example: 2
+          examples:
+          - 2
       responses:
         '200':
           description: Detalle completo de la sección.
@@ -265,7 +269,8 @@ paths:
           'proyecto-educativo').
         schema:
           type: string
-        example: equipo-directivo
+          examples:
+          - equipo-directivo
       responses:
         '200':
           description: Detalle completo de la sección encontrada por slug.
@@ -296,7 +301,8 @@ paths:
         description: Filtrar exclusivamente noticias fijadas como destacadas en portada.
         schema:
           type: boolean
-        example: true
+          examples:
+          - true
       - name: categoria
         in: query
         required: false
@@ -304,7 +310,8 @@ paths:
           'Actividades', 'Institucional').
         schema:
           type: string
-        example: Admisión
+          examples:
+          - Admisión
       - $ref: '#/components/parameters/PageParam'
       - $ref: '#/components/parameters/LimitParam'
       responses:
@@ -314,27 +321,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedNoticias'
-              example:
-                items:
-                - noticia_id: 101
-                  titulo: Apertura del periodo de admisión para Ciclos Formativos
-                    2026/2027
-                  slug: apertura-admision-ciclos-formativos-2026-2027
-                  resumen: Plazos, baremos y presentación telemática para Ciclos de
-                    FP Básica, Grado Medio y Superior.
-                  cuerpo_html: <p>La Consejería de Educación ha publicado el calendario
-                    oficial de escolarización...</p>
-                  imagen_portada: /uploads/noticias/admision-fp-2026.webp
-                  destacada: true
-                  estado: publicada
-                  fecha_publicacion: '2026-09-01T09:00:00Z'
-                  autor_nombre: Equipo Directivo
-                  categoria: Admisión
-                  creado_en: '2026-08-28T10:15:00Z'
-                  actualizado_en: '2026-09-01T09:00:00Z'
-                page: 1
-                limit: 10
-                total: 24
+              examples:
+                ejemplo:
+                  value:
+                    items:
+                    - noticia_id: 101
+                      titulo: Apertura del periodo de admisión para Ciclos Formativos
+                        2026/2027
+                      slug: apertura-admision-ciclos-formativos-2026-2027
+                      resumen: Plazos, baremos y presentación telemática para Ciclos
+                        de FP Básica, Grado Medio y Superior.
+                      cuerpo_html: <p>La Consejería de Educación ha publicado el calendario
+                        oficial de escolarización...</p>
+                      imagen_portada: /uploads/noticias/admision-fp-2026.webp
+                      destacada: true
+                      estado: publicada
+                      fecha_publicacion: '2026-09-01T09:00:00Z'
+                      autor_nombre: Equipo Directivo
+                      categoria: Admisión
+                      creado_en: '2026-08-28T10:15:00Z'
+                      actualizado_en: '2026-09-01T09:00:00Z'
+                    page: 1
+                    limit: 10
+                    total: 24
         '422':
           $ref: '#/components/responses/Error422'
   /api/v1/noticias/{slug}:
@@ -352,7 +361,8 @@ paths:
         description: Slug representativo de la noticia.
         schema:
           type: string
-        example: apertura-admision-ciclos-formativos-2026-2027
+          examples:
+          - apertura-admision-ciclos-formativos-2026-2027
       responses:
         '200':
           description: Noticia encontrada exitosamente.
@@ -382,30 +392,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedDepartamentos'
-              example:
-                items:
-                - departamento_id: 1
-                  nombre: Informática y Comunicaciones
-                  slug: informatica-y-comunicaciones
-                  jefe_departamento: Dña. Carmen Morales Gil
-                  email: informatica@iesramonarcasmeca.es
-                  ubicacion: Edificio B, 2ª Planta, Despacho TIC
-                  descripcion: Responsable de los ciclos formativos de Grado Básico,
-                    Medio y Superior de la familia profesional de Informática y materias
-                    optativas afines.
-                  total_profesores: 14
-                - departamento_id: 2
-                  nombre: Matemáticas
-                  slug: matematicas
-                  jefe_departamento: D. Pedro Navarro López
-                  email: matematicas@iesramonarcasmeca.es
-                  ubicacion: Edificio A, 1ª Planta, Despacho 102
-                  descripcion: Docencia y refuerzo en materias de matemáticas en ESO
-                    y Bachillerato.
-                  total_profesores: 11
-                page: 1
-                limit: 10
-                total: 16
+              examples:
+                ejemplo:
+                  value:
+                    items:
+                    - departamento_id: 1
+                      nombre: Informática y Comunicaciones
+                      slug: informatica-y-comunicaciones
+                      jefe_departamento: Dña. Carmen Morales Gil
+                      email: informatica@iesramonarcasmeca.es
+                      ubicacion: Edificio B, 2ª Planta, Despacho TIC
+                      descripcion: Responsable de los ciclos formativos de Grado Básico,
+                        Medio y Superior de la familia profesional de Informática
+                        y materias optativas afines.
+                      total_profesores: 14
+                    - departamento_id: 2
+                      nombre: Matemáticas
+                      slug: matematicas
+                      jefe_departamento: D. Pedro Navarro López
+                      email: matematicas@iesramonarcasmeca.es
+                      ubicacion: Edificio A, 1ª Planta, Despacho 102
+                      descripcion: Docencia y refuerzo en materias de matemáticas
+                        en ESO y Bachillerato.
+                      total_profesores: 11
+                    page: 1
+                    limit: 10
+                    total: 16
         '422':
           $ref: '#/components/responses/Error422'
   /api/v1/departamentos/{departamento_id}:
@@ -423,7 +435,8 @@ paths:
         description: Identificador numérico del departamento.
         schema:
           type: integer
-        example: 1
+          examples:
+          - 1
       responses:
         '200':
           description: Detalle del departamento didáctico.
@@ -450,7 +463,8 @@ paths:
         description: Identificador del departamento didáctico.
         schema:
           type: integer
-        example: 1
+          examples:
+          - 1
       responses:
         '200':
           description: Listado de programas asociados al departamento.
@@ -500,7 +514,8 @@ paths:
           - educativo
           - plan_centro
           - actividad
-        example: educativo
+          examples:
+          - educativo
       - $ref: '#/components/parameters/PageParam'
       - $ref: '#/components/parameters/LimitParam'
       responses:
@@ -510,27 +525,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedProgramas'
-              example:
-                items:
-                - programa_id: 1
-                  nombre: Erasmus+ Proyectos Europeos
-                  slug: erasmus-plus
-                  categoria: educativo
-                  descripcion: Programa de internacionalización con movilidades para
-                    alumnado de FP y profesorado en centros de la Unión Europea.
-                  coordinador: D. Juan Antonio Ruiz Alarcón
-                  documento_url: /api/v1/documentos/12
-                  activo: true
-                  departamentos_participantes:
-                  - departamento_id: 1
-                    nombre: Informática y Comunicaciones
-                    slug: informatica-y-comunicaciones
-                  - departamento_id: 4
-                    nombre: Inglés
-                    slug: ingles
-                page: 1
-                limit: 10
-                total: 21
+              examples:
+                ejemplo:
+                  value:
+                    items:
+                    - programa_id: 1
+                      nombre: Erasmus+ Proyectos Europeos
+                      slug: erasmus-plus
+                      categoria: educativo
+                      descripcion: Programa de internacionalización con movilidades
+                        para alumnado de FP y profesorado en centros de la Unión Europea.
+                      coordinador: D. Juan Antonio Ruiz Alarcón
+                      documento_url: /api/v1/documentos/12
+                      activo: true
+                      departamentos_participantes:
+                      - departamento_id: 1
+                        nombre: Informática y Comunicaciones
+                        slug: informatica-y-comunicaciones
+                      - departamento_id: 4
+                        nombre: Inglés
+                        slug: ingles
+                    page: 1
+                    limit: 10
+                    total: 21
         '422':
           $ref: '#/components/responses/Error422'
   /api/v1/programas/{programa_id}:
@@ -548,7 +565,8 @@ paths:
         description: Identificador numérico del programa.
         schema:
           type: integer
-        example: 1
+          examples:
+          - 1
       responses:
         '200':
           description: Detalle completo del programa educativo.
@@ -581,7 +599,8 @@ paths:
           - fp_basica
           - fp_grado_medio
           - fp_grado_superior
-        example: fp_grado_superior
+          examples:
+          - fp_grado_superior
       - $ref: '#/components/parameters/PageParam'
       - $ref: '#/components/parameters/LimitParam'
       responses:
@@ -591,21 +610,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedEnsenanzas'
-              example:
-                items:
-                - ensenanza_id: 10
-                  nombre: CFGS Desarrollo de Aplicaciones Web (DAW)
-                  slug: cfgs-desarrollo-aplicaciones-web-daw
-                  etapa: fp_grado_superior
-                  duracion_horas: 2000
-                  curso_academico: 2026/2027
-                  descripcion: Formación profesional superior orientada al desarrollo
-                    e integración de aplicaciones y servicios web modernos con tecnologías
-                    front-end y back-end.
-                  titulacion: Técnico Superior en Desarrollo de Aplicaciones Web
-                page: 1
-                limit: 10
-                total: 9
+              examples:
+                ejemplo:
+                  value:
+                    items:
+                    - ensenanza_id: 10
+                      nombre: CFGS Desarrollo de Aplicaciones Web (DAW)
+                      slug: cfgs-desarrollo-aplicaciones-web-daw
+                      etapa: fp_grado_superior
+                      duracion_horas: 2000
+                      curso_academico: 2026/2027
+                      descripcion: Formación profesional superior orientada al desarrollo
+                        e integración de aplicaciones y servicios web modernos con
+                        tecnologías front-end y back-end.
+                      titulacion: Técnico Superior en Desarrollo de Aplicaciones Web
+                    page: 1
+                    limit: 10
+                    total: 9
         '422':
           $ref: '#/components/responses/Error422'
   /api/v1/ensenanzas/{ensenanza_id}:
@@ -623,7 +644,8 @@ paths:
         description: Identificador numérico de la enseñanza.
         schema:
           type: integer
-        example: 10
+          examples:
+          - 10
       responses:
         '200':
           description: Detalle completo de la enseñanza.
@@ -650,7 +672,8 @@ paths:
         description: Identificador de la enseñanza.
         schema:
           type: integer
-        example: 10
+          examples:
+          - 10
       responses:
         '200':
           description: Listado de materias optativas disponibles.
@@ -701,14 +724,16 @@ paths:
           - equipo_directivo
           - claustro
           - consejo_escolar
-        example: equipo_directivo
+          examples:
+          - equipo_directivo
       - name: departamento_id
         in: query
         required: false
         description: Filtrar docentes por departamento didáctico.
         schema:
           type: integer
-        example: 1
+          examples:
+          - 1
       - $ref: '#/components/parameters/PageParam'
       - $ref: '#/components/parameters/LimitParam'
       responses:
@@ -718,31 +743,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedPersonas'
-              example:
-                items:
-                - persona_id: 1
-                  nombre: Antonio
-                  apellidos: Martínez Belmonte
-                  tipo: equipo_directivo
-                  cargo: Director
-                  departamento_id: 1
-                  departamento_nombre: Informática y Comunicaciones
-                  email: direccion@iesramonarcasmeca.es
-                  foto_url: /uploads/personas/director.webp
-                  orden: 1
-                - persona_id: 2
-                  nombre: Laura
-                  apellidos: Gómez Sánchez
-                  tipo: equipo_directivo
-                  cargo: Jefa de Estudios
-                  departamento_id: 2
-                  departamento_nombre: Matemáticas
-                  email: jefatura@iesramonarcasmeca.es
-                  foto_url: /uploads/personas/jefa-estudios.webp
-                  orden: 2
-                page: 1
-                limit: 10
-                total: 85
+              examples:
+                ejemplo:
+                  value:
+                    items:
+                    - persona_id: 1
+                      nombre: Antonio
+                      apellidos: Martínez Belmonte
+                      tipo: equipo_directivo
+                      cargo: Director
+                      departamento_id: 1
+                      departamento_nombre: Informática y Comunicaciones
+                      email: direccion@iesramonarcasmeca.es
+                      foto_url: /uploads/personas/director.webp
+                      orden: 1
+                    - persona_id: 2
+                      nombre: Laura
+                      apellidos: Gómez Sánchez
+                      tipo: equipo_directivo
+                      cargo: Jefa de Estudios
+                      departamento_id: 2
+                      departamento_nombre: Matemáticas
+                      email: jefatura@iesramonarcasmeca.es
+                      foto_url: /uploads/personas/jefa-estudios.webp
+                      orden: 2
+                    page: 1
+                    limit: 10
+                    total: 85
         '422':
           $ref: '#/components/responses/Error422'
   /api/v1/personas/{persona_id}:
@@ -760,7 +787,8 @@ paths:
         description: Identificador numérico de la persona.
         schema:
           type: integer
-        example: 1
+          examples:
+          - 1
       responses:
         '200':
           description: Ficha de la persona localizada.
@@ -796,14 +824,16 @@ paths:
           - institucional
           - familias
           - programa
-        example: institucional
+          examples:
+          - institucional
       - name: seccion_id
         in: query
         required: false
         description: Filtrar documentos vinculados a una sección determinada.
         schema:
           type: integer
-        example: 2
+          examples:
+          - 2
       - $ref: '#/components/parameters/PageParam'
       - $ref: '#/components/parameters/LimitParam'
       responses:
@@ -813,23 +843,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedDocumentos'
-              example:
-                items:
-                - documento_id: 15
-                  titulo: Proyecto Educativo de Centro (PEC) 2026/2027
-                  descripcion: Documento marco que establece los valores pedagógicos,
-                    modelo organizativo e identidad del IES Ramón Arcas Meca.
-                  categoria: institucional
-                  seccion_id: 2
-                  archivo_url: /uploads/documentos/pec-2026-2027.pdf
-                  tamanio_bytes: 3145728
-                  tipo_mime: application/pdf
-                  descargas: 142
-                  creado_en: '2026-09-01T10:00:00Z'
-                  actualizado_en: '2026-09-15T12:00:00Z'
-                page: 1
-                limit: 10
-                total: 35
+              examples:
+                ejemplo:
+                  value:
+                    items:
+                    - documento_id: 15
+                      titulo: Proyecto Educativo de Centro (PEC) 2026/2027
+                      descripcion: Documento marco que establece los valores pedagógicos,
+                        modelo organizativo e identidad del IES Ramón Arcas Meca.
+                      categoria: institucional
+                      seccion_id: 2
+                      archivo_url: /uploads/documentos/pec-2026-2027.pdf
+                      tamanio_bytes: 3145728
+                      tipo_mime: application/pdf
+                      descargas: 142
+                      creado_en: '2026-09-01T10:00:00Z'
+                      actualizado_en: '2026-09-15T12:00:00Z'
+                    page: 1
+                    limit: 10
+                    total: 35
         '422':
           $ref: '#/components/responses/Error422'
   /api/v1/documentos/{documento_id}:
@@ -847,7 +879,8 @@ paths:
         description: Identificador único del documento.
         schema:
           type: integer
-        example: 15
+          examples:
+          - 15
       responses:
         '200':
           description: Metadatos y enlace de descarga del documento.
@@ -881,26 +914,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ConfiguracionCentro'
-              example:
-                nombre: IES Ramón Arcas Meca
-                codigo_centro: '30006184'
-                cif: Q3068012A
-                direccion: Alameda de Cervantes, s/n
-                codigo_postal: '30850'
-                localidad: Totana
-                provincia: Murcia
-                telefono: +34 968 42 12 34
-                email: 30006184@murciaeduca.es
-                horario_atencion: Lunes a Viernes de 08:30 a 14:00
-                coordenadas:
-                  latitud: 37.771234
-                  longitud: -1.503456
-                redes_sociales:
-                  twitter: https://twitter.com/iesramonarcas
-                  instagram: https://instagram.com/iesramonarcas
-                  youtube: https://youtube.com/c/IESRamonArcasMeca
-                  facebook: https://facebook.com/iesramonarcasmeca
-                lema: Educación pública, calidad, inclusión e innovación tecnológica
+              examples:
+                ejemplo:
+                  value:
+                    nombre: IES Ramón Arcas Meca
+                    codigo_centro: '30006184'
+                    cif: Q3068012A
+                    direccion: Alameda de Cervantes, s/n
+                    codigo_postal: '30850'
+                    localidad: Lorca
+                    provincia: Murcia
+                    telefono: +34 968 42 12 34
+                    email: 30006184@murciaeduca.es
+                    horario_atencion: Lunes a Viernes de 08:30 a 14:00
+                    coordenadas:
+                      latitud: 37.771234
+                      longitud: -1.503456
+                    redes_sociales:
+                      twitter: https://twitter.com/iesramonarcas
+                      instagram: https://instagram.com/iesramonarcas
+                      youtube: https://youtube.com/c/IESRamonArcasMeca
+                      facebook: https://facebook.com/iesramonarcasmeca
+                    lema: Educación pública, calidad, inclusión e innovación tecnológica
         '500':
           description: Error interno al leer la configuración.
           content:
@@ -946,9 +981,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-              example:
-                detail: La franja horaria seleccionada ya no se encuentra disponible.
-                  Por favor, escoja otro horario.
+              examples:
+                ejemplo:
+                  value:
+                    detail: La franja horaria seleccionada ya no se encuentra disponible.
+                      Por favor, escoja otro horario.
         '422':
           $ref: '#/components/responses/Error422'
   /api/v1/secretaria/citas/{cita_id}/estado:
@@ -966,7 +1003,8 @@ paths:
         description: Identificador numérico o código de cita previa.
         schema:
           type: integer
-        example: 205
+          examples:
+          - 205
       responses:
         '200':
           description: Información del estado de la cita.
@@ -1031,7 +1069,8 @@ paths:
         description: Identificador numérico del trámite.
         schema:
           type: integer
-        example: 312
+          examples:
+          - 312
       responses:
         '200':
           description: Estado del trámite administrativo.
@@ -1094,14 +1133,16 @@ paths:
             application/xml:
               schema:
                 type: string
-              example: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"\
-                http://www.sitemaps.org/schemas/sitemap/0.9\">\n  <url>\n    <loc>https://www.iesramonarcasmeca.es/</loc>\n\
-                \    <lastmod>2026-10-15</lastmod>\n    <changefreq>daily</changefreq>\n\
-                \    <priority>1.0</priority>\n  </url>\n  <url>\n    <loc>https://www.iesramonarcasmeca.es/noticias</loc>\n\
-                \    <lastmod>2026-10-15</lastmod>\n    <changefreq>daily</changefreq>\n\
-                \    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>https://www.iesramonarcasmeca.es/ensenanzas</loc>\n\
-                \    <lastmod>2026-10-01</lastmod>\n    <changefreq>weekly</changefreq>\n\
-                \    <priority>0.8</priority>\n  </url>\n</urlset>\n"
+              examples:
+                ejemplo:
+                  value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"\
+                    http://www.sitemaps.org/schemas/sitemap/0.9\">\n  <url>\n    <loc>https://www.iesramonarcasmeca.es/</loc>\n\
+                    \    <lastmod>2026-10-15</lastmod>\n    <changefreq>daily</changefreq>\n\
+                    \    <priority>1.0</priority>\n  </url>\n  <url>\n    <loc>https://www.iesramonarcasmeca.es/noticias</loc>\n\
+                    \    <lastmod>2026-10-15</lastmod>\n    <changefreq>daily</changefreq>\n\
+                    \    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>https://www.iesramonarcasmeca.es/ensenanzas</loc>\n\
+                    \    <lastmod>2026-10-01</lastmod>\n    <changefreq>weekly</changefreq>\n\
+                    \    <priority>0.8</priority>\n  </url>\n</urlset>\n"
   /api/v1/admin/auth/login:
     post:
       tags:
@@ -1141,8 +1182,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-              example:
-                detail: Las credenciales introducidas no son válidas.
+              examples:
+                ejemplo:
+                  value:
+                    detail: Las credenciales introducidas no son válidas.
         '422':
           $ref: '#/components/responses/Error422'
   /api/v1/admin/auth/logout:
@@ -1206,13 +1249,15 @@ paths:
           enum:
           - borrador
           - publicada
-        example: borrador
+          examples:
+          - borrador
       - name: destacada
         in: query
         required: false
         schema:
           type: boolean
-        example: false
+          examples:
+          - false
         description: Filtro booleano para listar únicamente noticias fijadas como
           destacadas.
       - $ref: '#/components/parameters/PageParam'
@@ -1269,9 +1314,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-              example:
-                detail: Ya existe una noticia registrada con ese slug. Indique uno
-                  diferente.
+              examples:
+                ejemplo:
+                  value:
+                    detail: Ya existe una noticia registrada con ese slug. Indique
+                      uno diferente.
         '422':
           $ref: '#/components/responses/Error422'
   /api/v1/admin/noticias/{noticia_id}:
@@ -1290,7 +1337,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 101
+          examples:
+          - 101
         description: Identificador numérico secuencial único de la noticia.
       responses:
         '200':
@@ -1319,7 +1367,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 101
+          examples:
+          - 101
         description: Identificador numérico secuencial único de la noticia.
       requestBody:
         required: true
@@ -1359,7 +1408,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 101
+          examples:
+          - 101
         description: Identificador numérico secuencial único de la noticia.
       responses:
         '204':
@@ -1386,7 +1436,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 101
+          examples:
+          - 101
         description: Identificador numérico secuencial único de la noticia.
       requestBody:
         required: true
@@ -1503,7 +1554,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 15
+          examples:
+          - 15
         description: Identificador numérico único del documento alojado.
       responses:
         '200':
@@ -1533,7 +1585,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 15
+          examples:
+          - 15
         description: Identificador numérico único del documento alojado.
       requestBody:
         required: true
@@ -1571,7 +1624,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 15
+          examples:
+          - 15
         description: Identificador numérico único del documento alojado.
       responses:
         '204':
@@ -1598,7 +1652,8 @@ paths:
         required: false
         schema:
           type: boolean
-        example: false
+          examples:
+          - false
         description: Filtro para listar secciones según su estado de visibilidad pública
           (true/false).
       - name: padre_id
@@ -1675,7 +1730,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 2
+          examples:
+          - 2
         description: Identificador numérico único de la página o sección web.
       responses:
         '200':
@@ -1705,7 +1761,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 2
+          examples:
+          - 2
         description: Identificador numérico único de la página o sección web.
       requestBody:
         required: true
@@ -1745,7 +1802,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 2
+          examples:
+          - 2
         description: Identificador numérico único de la página o sección web.
       responses:
         '204':
@@ -1762,9 +1820,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-              example:
-                detail: No se puede eliminar la sección porque contiene subsecciones
-                  dependientes. Muévalas o bórrelas primero.
+              examples:
+                ejemplo:
+                  value:
+                    detail: No se puede eliminar la sección porque contiene subsecciones
+                      dependientes. Muévalas o bórrelas primero.
     patch:
       tags:
       - Admin - Secciones
@@ -1780,7 +1840,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 2
+          examples:
+          - 2
         description: Identificador numérico único de la página o sección web.
       requestBody:
         required: true
@@ -1898,7 +1959,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 1
+          examples:
+          - 1
         description: Identificador numérico único del miembro del equipo directivo,
           claustro o consejo.
       responses:
@@ -1929,7 +1991,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 1
+          examples:
+          - 1
         description: Identificador numérico único del miembro del equipo directivo,
           claustro o consejo.
       requestBody:
@@ -1967,7 +2030,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 1
+          examples:
+          - 1
         description: Identificador numérico único del miembro del equipo directivo,
           claustro o consejo.
       responses:
@@ -2055,7 +2119,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 1
+          examples:
+          - 1
         description: Identificador numérico único del departamento didáctico.
       responses:
         '200':
@@ -2084,7 +2149,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 1
+          examples:
+          - 1
         description: Identificador numérico único del departamento didáctico.
       requestBody:
         required: true
@@ -2123,7 +2189,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 1
+          examples:
+          - 1
         description: Identificador numérico único del departamento didáctico.
       responses:
         '204':
@@ -2140,9 +2207,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-              example:
-                detail: No se puede eliminar el departamento porque tiene profesorado
-                  adscrito. Reasigne al personal primero.
+              examples:
+                ejemplo:
+                  value:
+                    detail: No se puede eliminar el departamento porque tiene profesorado
+                      adscrito. Reasigne al personal primero.
   /api/v1/admin/programas:
     get:
       tags:
@@ -2230,7 +2299,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 1
+          examples:
+          - 1
         description: Identificador numérico único del plan o programa institucional
           del centro.
       responses:
@@ -2261,7 +2331,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 1
+          examples:
+          - 1
         description: Identificador numérico único del plan o programa institucional
           del centro.
       requestBody:
@@ -2302,7 +2373,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 1
+          examples:
+          - 1
         description: Identificador numérico único del plan o programa institucional
           del centro.
       responses:
@@ -2335,7 +2407,8 @@ paths:
         description: Identificador del programa.
         schema:
           type: integer
-        example: 1
+          examples:
+          - 1
       requestBody:
         required: true
         content:
@@ -2456,7 +2529,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 10
+          examples:
+          - 10
         description: Identificador numérico único del ciclo formativo o etapa educativa.
       responses:
         '200':
@@ -2485,7 +2559,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 10
+          examples:
+          - 10
         description: Identificador numérico único del ciclo formativo o etapa educativa.
       requestBody:
         required: true
@@ -2525,7 +2600,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 10
+          examples:
+          - 10
         description: Identificador numérico único del ciclo formativo o etapa educativa.
       responses:
         '204':
@@ -2553,7 +2629,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 10
+          examples:
+          - 10
         description: Identificador numérico único del ciclo formativo o etapa educativa.
       responses:
         '200':
@@ -2584,7 +2661,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 10
+          examples:
+          - 10
         description: Identificador numérico único del ciclo formativo o etapa educativa.
       requestBody:
         required: true
@@ -2629,14 +2707,16 @@ paths:
         required: true
         schema:
           type: integer
-        example: 10
+          examples:
+          - 10
         description: Identificador numérico único del ciclo formativo o etapa educativa.
       - name: materia_id
         in: path
         required: true
         schema:
           type: integer
-        example: 101
+          examples:
+          - 101
         description: Identificador numérico único de la materia optativa asociada
           a la enseñanza.
       responses:
@@ -2666,14 +2746,16 @@ paths:
         required: true
         schema:
           type: integer
-        example: 10
+          examples:
+          - 10
         description: Identificador numérico único del ciclo formativo o etapa educativa.
       - name: materia_id
         in: path
         required: true
         schema:
           type: integer
-        example: 101
+          examples:
+          - 101
         description: Identificador numérico único de la materia optativa asociada
           a la enseñanza.
       requestBody:
@@ -2711,14 +2793,16 @@ paths:
         required: true
         schema:
           type: integer
-        example: 10
+          examples:
+          - 10
         description: Identificador numérico único del ciclo formativo o etapa educativa.
       - name: materia_id
         in: path
         required: true
         schema:
           type: integer
-        example: 101
+          examples:
+          - 101
         description: Identificador numérico único de la materia optativa asociada
           a la enseñanza.
       responses:
@@ -2754,7 +2838,8 @@ paths:
           enum:
           - cita
           - tramite
-        example: cita
+          examples:
+          - cita
       - name: estado
         in: query
         required: false
@@ -2766,7 +2851,8 @@ paths:
           - en_curso
           - finalizado
           - cancelado
-        example: pendiente
+          examples:
+          - pendiente
       - $ref: '#/components/parameters/PageParam'
       - $ref: '#/components/parameters/LimitParam'
       responses:
@@ -2798,7 +2884,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 205
+          examples:
+          - 205
         description: Identificador numérico único de la solicitud de secretaría (cita
           o trámite administrativo).
       responses:
@@ -2834,7 +2921,8 @@ paths:
         required: true
         schema:
           type: integer
-        example: 205
+          examples:
+          - 205
         description: Identificador numérico único de la solicitud de secretaría (cita
           o trámite administrativo).
       requestBody:
@@ -2863,9 +2951,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-              example:
-                detail: Transición de estado no permitida. Una solicitud finalizada
-                  no puede retornar a pendiente.
+              examples:
+                ejemplo:
+                  value:
+                    detail: Transición de estado no permitida. Una solicitud finalizada
+                      no puede retornar a pendiente.
         '422':
           $ref: '#/components/responses/Error422'
   /api/v1/admin/configuracion:
@@ -2938,7 +3028,8 @@ components:
         type: integer
         minimum: 1
         default: 1
-      example: 1
+        examples:
+        - 1
     LimitParam:
       name: limit
       in: query
@@ -2949,7 +3040,8 @@ components:
         minimum: 1
         maximum: 50
         default: 10
-      example: 10
+        examples:
+        - 10
   responses:
     Error401:
       description: No autenticado. Sesión inexistente o cookie `PHPSESSID` expirada.
@@ -2957,24 +3049,30 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-          example:
-            detail: Sesión no válida o expirada. Por favor, inicie sesión nuevamente.
+          examples:
+            ejemplo:
+              value:
+                detail: Sesión no válida o expirada. Por favor, inicie sesión nuevamente.
     Error403:
       description: Acceso denegado. Permisos insuficientes para ejecutar esta operación.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-          example:
-            detail: No dispone de los permisos necesarios para realizar esta acción.
+          examples:
+            ejemplo:
+              value:
+                detail: No dispone de los permisos necesarios para realizar esta acción.
     Error404:
       description: Recurso no encontrado.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-          example:
-            detail: El recurso solicitado no fue encontrado en el servidor.
+          examples:
+            ejemplo:
+              value:
+                detail: El recurso solicitado no fue encontrado en el servidor.
     Error409:
       description: Conflicto con el estado actual del recurso (duplicidad de claves
         únicas o conflicto relacional).
@@ -2982,17 +3080,21 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-          example:
-            detail: Ya existe un registro con el slug o código proporcionado.
+          examples:
+            ejemplo:
+              value:
+                detail: Ya existe un registro con el slug o código proporcionado.
     Error422:
       description: Error de validación en los campos enviados o parámetros de consulta.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-          example:
-            detail: 'Error de validación: el campo ''email'' no tiene un formato válido
-              y ''titulo'' es obligatorio.'
+          examples:
+            ejemplo:
+              value:
+                detail: 'Error de validación: el campo ''email'' no tiene un formato
+                  válido y ''titulo'' es obligatorio.'
   schemas:
     Error:
       type: object
