@@ -89,15 +89,12 @@ Total de **124 endpoints** definidos bajo especificación formal **OpenAPI 3.1**
 │   ├── api/                     # Contratos OpenAPI 3.1
 │   │   ├── openapi-intranet.yaml
 │   │   └── openapi-web.yaml
-│   ├── CONTEXTO_OFICIAL_PROYECTO.md
-│   ├── ESTADO_ACTUAL_Y_CONTINUACION.md
 │   ├── index.html               # Portal interactivo (Swagger UI + Redoc)
 │   └── cheatsheet.html          # Hoja visual imprimible A3 / PDF
 ├── .github/workflows/           # CI/CD (GitHub Actions)
 │   ├── deploy-docs.yml          # Despliegue automático a GitHub Pages
 │   └── lint-openapi.yml         # Validación continua de contratos OpenAPI
 ├── docker-compose.yml           # Orquestación de contenedores
-├── .env.example                 # Variables de entorno de plantilla
 ├── .gitignore
 ├── LICENSE                      # Licencia MIT
 └── README.md
@@ -112,22 +109,17 @@ Total de **124 endpoints** definidos bajo especificación formal **OpenAPI 3.1**
 git clone https://github.com/DAW2ProyectoIntermodular/ProyectoIntermodular.git
 cd ProyectoIntermodular
 
-# 2. Configurar variables de entorno
-cp .env.example .env
+# 2. Documentación interactiva de la API (Swagger UI / Redoc)
+# https://daw2proyectointermodular.github.io/ProyectoIntermodular/
 
-# 3. Levantar servicios con Docker
-docker-compose up -d
-
-# 4. Enlaces de acceso
-# Intranet PWA:      http://localhost:3000
-# Intranet API:      http://localhost:8000/api/v1
-# Web Pública:       http://localhost:8080
-# Documentación API: https://daw2proyectointermodular.github.io/ProyectoIntermodular/
+# 3. Enlaces de acceso y documentación
+# Portal API Docs:   https://daw2proyectointermodular.github.io/ProyectoIntermodular/
+# Cheatsheet A3:     https://daw2proyectointermodular.github.io/ProyectoIntermodular/cheatsheet.html
 ```
 
 ---
 
-## 👥 Equipo y Distribución del Trabajo (50 / 50)
+## 👥 Equipo
 
 | Integrante | Usuario GitHub | Correo Oficial | Rol Principal |
 |---|---|---|---|
