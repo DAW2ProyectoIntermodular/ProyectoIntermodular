@@ -29,17 +29,16 @@ info:
     \ Found`, `409 Conflict`, `422 Unprocessable Entity`.\n"
   version: 1.0.0
   contact:
-    name: Equipo de Desarrollo DAW2 - IES Ramón Arcas Meca
-    email: informatica@iesramonarcasmeca.es
-    url: https://www.iesramonarcasmeca.es
+    name: José Iver Peñarrieta y Francisco Guerrero (2º DAW)
+    url: https://github.com/DAW2ProyectoIntermodular/ProyectoIntermodular
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
 servers:
 - url: http://localhost:8080
-  description: Servidor de desarrollo local (PHP CLI Server / Apache / Docker)
-- url: https://www.iesramonarcasmeca.es
-  description: Servidor de producción oficial
+  description: Desarrollo local (servidor PHP / Docker)
+- url: https://www.iesramonarcas.es
+  description: Producción (dominio actual del centro)
 tags:
 - name: Navegación
   description: Consulta del árbol de navegación y estructura jerárquica del portal
@@ -134,6 +133,8 @@ paths:
                       visible: true
                       enlace_externo: null
                       hijos: []
+                      creado_en: '2026-09-01T08:00:00Z'
+                      actualizado_en: '2026-09-01T08:00:00Z'
                     - seccion_id: 3
                       padre_id: 1
                       titulo: Claustro de Profesores
@@ -142,6 +143,10 @@ paths:
                       visible: true
                       enlace_externo: null
                       hijos: []
+                      creado_en: '2026-09-01T08:00:00Z'
+                      actualizado_en: '2026-09-01T08:00:00Z'
+                    creado_en: '2026-09-01T08:00:00Z'
+                    actualizado_en: '2026-09-01T08:00:00Z'
                   - seccion_id: 4
                     padre_id: null
                     titulo: Enseñanzas
@@ -158,12 +163,17 @@ paths:
                       visible: true
                       enlace_externo: null
                       hijos: []
+                      creado_en: '2026-09-01T08:00:00Z'
+                      actualizado_en: '2026-09-01T08:00:00Z'
+                    creado_en: '2026-09-01T08:00:00Z'
+                    actualizado_en: '2026-09-01T08:00:00Z'
         '500':
           description: Error interno del servidor al procesar la jerarquía del menú.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      security: []
   /api/v1/secciones:
     get:
       tags:
@@ -193,7 +203,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedSecciones'
+                $ref: '#/components/schemas/PaginaSecciones'
               examples:
                 ejemplo:
                   value:
@@ -204,8 +214,6 @@ paths:
                       slug: equipo-directivo
                       orden: 1
                       visible: true
-                      contenido_html: <p>Conoce a los miembros del equipo directivo
-                        del IES Ramón Arcas Meca.</p>
                       enlace_externo: null
                       creado_en: '2026-09-01T08:00:00Z'
                       actualizado_en: '2026-09-10T11:30:00Z'
@@ -215,8 +223,6 @@ paths:
                       slug: consejo-escolar
                       orden: 2
                       visible: true
-                      contenido_html: <p>Composición y funciones del Consejo Escolar
-                        durante el curso 2026/2027.</p>
                       enlace_externo: null
                       creado_en: '2026-09-01T08:00:00Z'
                       actualizado_en: '2026-09-15T09:20:00Z'
@@ -225,34 +231,7 @@ paths:
                     total: 18
         '422':
           $ref: '#/components/responses/Error422'
-  /api/v1/secciones/{seccion_id}:
-    get:
-      tags:
-      - Secciones
-      summary: Obtener detalle de una sección por su identificador numérico
-      description: Devuelve el contenido completo y metadatos de una sección pública
-        específica identificada por su ID primario.
-      operationId: obtenerSeccionPorId
-      parameters:
-      - name: seccion_id
-        in: path
-        required: true
-        description: Identificador único numérico de la sección.
-        schema:
-          type: integer
-          examples:
-          - 2
-      responses:
-        '200':
-          description: Detalle completo de la sección.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SeccionDetalle'
-        '404':
-          $ref: '#/components/responses/Error404'
-        '422':
-          $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/secciones/{slug}:
     get:
       tags:
@@ -282,6 +261,7 @@ paths:
           $ref: '#/components/responses/Error404'
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/noticias:
     get:
       tags:
@@ -320,7 +300,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedNoticias'
+                $ref: '#/components/schemas/PaginaNoticias'
               examples:
                 ejemplo:
                   value:
@@ -331,8 +311,6 @@ paths:
                       slug: apertura-admision-ciclos-formativos-2026-2027
                       resumen: Plazos, baremos y presentación telemática para Ciclos
                         de FP Básica, Grado Medio y Superior.
-                      cuerpo_html: <p>La Consejería de Educación ha publicado el calendario
-                        oficial de escolarización...</p>
                       imagen_portada: /uploads/noticias/admision-fp-2026.webp
                       destacada: true
                       estado: publicada
@@ -346,6 +324,7 @@ paths:
                     total: 24
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/noticias/{slug}:
     get:
       tags:
@@ -374,6 +353,7 @@ paths:
           $ref: '#/components/responses/Error404'
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/departamentos:
     get:
       tags:
@@ -391,7 +371,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedDepartamentos'
+                $ref: '#/components/schemas/PaginaDepartamentos'
               examples:
                 ejemplo:
                   value:
@@ -400,26 +380,25 @@ paths:
                       nombre: Informática y Comunicaciones
                       slug: informatica-y-comunicaciones
                       jefe_departamento: Dña. Carmen Morales Gil
-                      email: informatica@iesramonarcasmeca.es
+                      email: informatica@example.org
                       ubicacion: Edificio B, 2ª Planta, Despacho TIC
                       descripcion: Responsable de los ciclos formativos de Grado Básico,
                         Medio y Superior de la familia profesional de Informática
                         y materias optativas afines.
-                      total_profesores: 14
                     - departamento_id: 2
                       nombre: Matemáticas
                       slug: matematicas
                       jefe_departamento: D. Pedro Navarro López
-                      email: matematicas@iesramonarcasmeca.es
+                      email: matematicas@example.org
                       ubicacion: Edificio A, 1ª Planta, Despacho 102
                       descripcion: Docencia y refuerzo en materias de matemáticas
                         en ESO y Bachillerato.
-                      total_profesores: 11
                     page: 1
                     limit: 10
                     total: 16
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/departamentos/{departamento_id}:
     get:
       tags:
@@ -448,6 +427,7 @@ paths:
           $ref: '#/components/responses/Error404'
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/departamentos/{departamento_id}/programas:
     get:
       tags:
@@ -491,6 +471,7 @@ paths:
           $ref: '#/components/responses/Error404'
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/programas:
     get:
       tags:
@@ -524,7 +505,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedProgramas'
+                $ref: '#/components/schemas/PaginaProgramas'
               examples:
                 ejemplo:
                   value:
@@ -550,6 +531,7 @@ paths:
                     total: 21
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/programas/{programa_id}:
     get:
       tags:
@@ -578,6 +560,7 @@ paths:
           $ref: '#/components/responses/Error404'
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/ensenanzas:
     get:
       tags:
@@ -609,7 +592,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedEnsenanzas'
+                $ref: '#/components/schemas/PaginaEnsenanzas'
               examples:
                 ejemplo:
                   value:
@@ -629,6 +612,7 @@ paths:
                     total: 9
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/ensenanzas/{ensenanza_id}:
     get:
       tags:
@@ -657,6 +641,7 @@ paths:
           $ref: '#/components/responses/Error404'
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/ensenanzas/{ensenanza_id}/materias-optativas:
     get:
       tags:
@@ -702,6 +687,7 @@ paths:
           $ref: '#/components/responses/Error404'
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/personas:
     get:
       tags:
@@ -742,7 +728,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedPersonas'
+                $ref: '#/components/schemas/PaginaPersonas'
               examples:
                 ejemplo:
                   value:
@@ -754,7 +740,7 @@ paths:
                       cargo: Director
                       departamento_id: 1
                       departamento_nombre: Informática y Comunicaciones
-                      email: direccion@iesramonarcasmeca.es
+                      email: direccion@example.org
                       foto_url: /uploads/personas/director.webp
                       orden: 1
                     - persona_id: 2
@@ -764,7 +750,7 @@ paths:
                       cargo: Jefa de Estudios
                       departamento_id: 2
                       departamento_nombre: Matemáticas
-                      email: jefatura@iesramonarcasmeca.es
+                      email: jefatura@example.org
                       foto_url: /uploads/personas/jefa-estudios.webp
                       orden: 2
                     page: 1
@@ -772,6 +758,7 @@ paths:
                     total: 85
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/personas/{persona_id}:
     get:
       tags:
@@ -800,6 +787,7 @@ paths:
           $ref: '#/components/responses/Error404'
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/documentos:
     get:
       tags:
@@ -842,7 +830,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedDocumentos'
+                $ref: '#/components/schemas/PaginaDocumentos'
               examples:
                 ejemplo:
                   value:
@@ -864,6 +852,7 @@ paths:
                     total: 35
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/documentos/{documento_id}:
     get:
       tags:
@@ -892,6 +881,7 @@ paths:
           $ref: '#/components/responses/Error404'
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/configuracion:
     get:
       tags:
@@ -918,23 +908,23 @@ paths:
                 ejemplo:
                   value:
                     nombre: IES Ramón Arcas Meca
-                    codigo_centro: '30006184'
-                    cif: Q3068012A
-                    direccion: Alameda de Cervantes, s/n
-                    codigo_postal: '30850'
+                    codigo_centro: '30011697'
+                    cif: Q3000000A
+                    direccion: Avda. Juan Carlos I, 72
+                    codigo_postal: '30800'
                     localidad: Lorca
                     provincia: Murcia
-                    telefono: +34 968 42 12 34
-                    email: 30006184@murciaeduca.es
+                    telefono: +34 968 47 70 56
+                    email: centro@iesramonarcas.es
                     horario_atencion: Lunes a Viernes de 08:30 a 14:00
                     coordenadas:
-                      latitud: 37.771234
-                      longitud: -1.503456
+                      latitud: 37.6765
+                      longitud: -1.6985
                     redes_sociales:
-                      twitter: https://twitter.com/iesramonarcas
-                      instagram: https://instagram.com/iesramonarcas
-                      youtube: https://youtube.com/c/IESRamonArcasMeca
-                      facebook: https://facebook.com/iesramonarcasmeca
+                      twitter: https://x.com/cuenta_del_centro
+                      instagram: https://www.instagram.com/cuenta_del_centro
+                      youtube: https://www.youtube.com/@cuenta_del_centro
+                      facebook: https://www.facebook.com/cuenta_del_centro
                     lema: Educación pública, calidad, inclusión e innovación tecnológica
         '500':
           description: Error interno al leer la configuración.
@@ -942,6 +932,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      security: []
   /api/v1/secretaria/citas:
     post:
       tags:
@@ -988,6 +979,7 @@ paths:
                       Por favor, escoja otro horario.
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/secretaria/citas/{cita_id}/estado:
     get:
       tags:
@@ -1016,6 +1008,7 @@ paths:
           $ref: '#/components/responses/Error404'
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/secretaria/tramites:
     post:
       tags:
@@ -1054,6 +1047,7 @@ paths:
           $ref: '#/components/responses/Error409'
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/secretaria/tramites/{tramite_id}/estado:
     get:
       tags:
@@ -1082,6 +1076,7 @@ paths:
           $ref: '#/components/responses/Error404'
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/contacto/quejas-sugerencias:
     post:
       tags:
@@ -1117,6 +1112,7 @@ paths:
                 $ref: '#/components/schemas/QuejaSugerencia'
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /sitemap.xml:
     get:
       tags:
@@ -1136,13 +1132,14 @@ paths:
               examples:
                 ejemplo:
                   value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"\
-                    http://www.sitemaps.org/schemas/sitemap/0.9\">\n  <url>\n    <loc>https://www.iesramonarcasmeca.es/</loc>\n\
+                    http://www.sitemaps.org/schemas/sitemap/0.9\">\n  <url>\n    <loc>https://www.iesramonarcas.es/</loc>\n\
                     \    <lastmod>2026-10-15</lastmod>\n    <changefreq>daily</changefreq>\n\
-                    \    <priority>1.0</priority>\n  </url>\n  <url>\n    <loc>https://www.iesramonarcasmeca.es/noticias</loc>\n\
+                    \    <priority>1.0</priority>\n  </url>\n  <url>\n    <loc>https://www.iesramonarcas.es/noticias</loc>\n\
                     \    <lastmod>2026-10-15</lastmod>\n    <changefreq>daily</changefreq>\n\
-                    \    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>https://www.iesramonarcasmeca.es/ensenanzas</loc>\n\
+                    \    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>https://www.iesramonarcas.es/ensenanzas</loc>\n\
                     \    <lastmod>2026-10-01</lastmod>\n    <changefreq>weekly</changefreq>\n\
                     \    <priority>0.8</priority>\n  </url>\n</urlset>\n"
+      security: []
   /api/v1/admin/auth/login:
     post:
       tags:
@@ -1188,6 +1185,7 @@ paths:
                     detail: Las credenciales introducidas no son válidas.
         '422':
           $ref: '#/components/responses/Error422'
+      security: []
   /api/v1/admin/auth/logout:
     post:
       tags:
@@ -1268,7 +1266,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedNoticias'
+                $ref: '#/components/schemas/PaginaNoticias'
         '401':
           $ref: '#/components/responses/Error401'
         '403':
@@ -1497,7 +1495,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedDocumentos'
+                $ref: '#/components/schemas/PaginaDocumentos'
         '401':
           $ref: '#/components/responses/Error401'
         '403':
@@ -1671,7 +1669,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedSecciones'
+                $ref: '#/components/schemas/PaginaSecciones'
         '401':
           $ref: '#/components/responses/Error401'
         '403':
@@ -1901,7 +1899,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedPersonas'
+                $ref: '#/components/schemas/PaginaPersonas'
         '401':
           $ref: '#/components/responses/Error401'
         '403':
@@ -2061,7 +2059,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedDepartamentos'
+                $ref: '#/components/schemas/PaginaDepartamentos'
         '401':
           $ref: '#/components/responses/Error401'
         '403':
@@ -2241,7 +2239,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedProgramas'
+                $ref: '#/components/schemas/PaginaProgramas'
         '401':
           $ref: '#/components/responses/Error401'
         '403':
@@ -2470,7 +2468,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedEnsenanzas'
+                $ref: '#/components/schemas/PaginaEnsenanzas'
         '401':
           $ref: '#/components/responses/Error401'
         '403':
@@ -2861,7 +2859,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedSolicitudesSecretaria'
+                $ref: '#/components/schemas/PaginaSolicitudesSecretaria'
         '401':
           $ref: '#/components/responses/Error401'
         '403':
@@ -3287,7 +3285,7 @@ components:
           type: integer
           examples:
           - 4
-    PaginatedSecciones:
+    PaginaSecciones:
       type: object
       required:
       - items
@@ -3505,7 +3503,7 @@ components:
           type: boolean
           examples:
           - true
-    PaginatedNoticias:
+    PaginaNoticias:
       type: object
       required:
       - items
@@ -3559,7 +3557,7 @@ components:
           type: string
           format: email
           examples:
-          - informatica@iesramonarcasmeca.es
+          - informatica@example.org
         ubicacion:
           type: string
           examples:
@@ -3628,7 +3626,7 @@ components:
           type: string
           format: email
           examples:
-          - hosteleria@iesramonarcasmeca.es
+          - hosteleria@example.org
         ubicacion:
           type: string
           examples:
@@ -3662,7 +3660,7 @@ components:
           type: string
           format: email
           examples:
-          - hosteleria@iesramonarcasmeca.es
+          - hosteleria@example.org
         ubicacion:
           type: string
           examples:
@@ -3671,7 +3669,7 @@ components:
           type: string
           examples:
           - Departamento actualizado con nuevos talleres.
-    PaginatedDepartamentos:
+    PaginaDepartamentos:
       type: object
       required:
       - items
@@ -3893,7 +3891,7 @@ components:
           - - 1
             - 2
             - 4
-    PaginatedProgramas:
+    PaginaProgramas:
       type: object
       required:
       - items
@@ -4149,7 +4147,7 @@ components:
           type: string
           examples:
           - Integración práctica de modelos LLM y visión por computador.
-    PaginatedEnsenanzas:
+    PaginaEnsenanzas:
       type: object
       required:
       - items
@@ -4224,7 +4222,7 @@ components:
           type: string
           format: email
           examples:
-          - direccion@iesramonarcasmeca.es
+          - direccion@example.org
         foto_url:
           type:
           - string
@@ -4289,7 +4287,7 @@ components:
           type: string
           format: email
           examples:
-          - sofia.ruiz@iesramonarcasmeca.es
+          - sofia.ruiz@example.org
         foto_url:
           type: string
           examples:
@@ -4337,7 +4335,7 @@ components:
           type: string
           format: email
           examples:
-          - sofia.ruiz@iesramonarcasmeca.es
+          - sofia.ruiz@example.org
         foto_url:
           type: string
           examples:
@@ -4346,7 +4344,7 @@ components:
           type: integer
           examples:
           - 5
-    PaginatedPersonas:
+    PaginaPersonas:
       type: object
       required:
       - items
@@ -4438,8 +4436,7 @@ components:
           examples:
           - '2026-09-15T12:00:00Z'
     DocumentoDetalle:
-      allOf:
-      - $ref: '#/components/schemas/Documento'
+      $ref: '#/components/schemas/Documento'
     DocumentoCrear:
       type: object
       required:
@@ -4525,7 +4522,7 @@ components:
           type: string
           examples:
           - application/pdf
-    PaginatedDocumentos:
+    PaginaDocumentos:
       type: object
       required:
       - items
@@ -4571,23 +4568,24 @@ components:
         codigo_centro:
           type: string
           examples:
-          - '30006184'
+          - '30011697'
         cif:
           type: string
           examples:
-          - Q3068012A
+          - Q3000000A
+          description: CIF del centro (valor de ejemplo, no real).
         direccion:
           type: string
           examples:
-          - Alameda de Cervantes, s/n
+          - Avda. Juan Carlos I, 72
         codigo_postal:
           type: string
           examples:
-          - '30850'
+          - '30800'
         localidad:
           type: string
           examples:
-          - Totana
+          - Lorca
         provincia:
           type: string
           examples:
@@ -4595,12 +4593,12 @@ components:
         telefono:
           type: string
           examples:
-          - +34 968 42 12 34
+          - +34 968 47 70 56
         email:
           type: string
           format: email
           examples:
-          - 30006184@murciaeduca.es
+          - centro@iesramonarcas.es
         horario_atencion:
           type: string
           examples:
@@ -4614,30 +4612,34 @@ components:
             latitud:
               type: number
               examples:
-              - 37.771234
+              - 37.6765
             longitud:
               type: number
               examples:
-              - -1.503456
+              - -1.6985
         redes_sociales:
           type: object
           properties:
             twitter:
               type: string
               examples:
-              - https://twitter.com/iesramonarcas
+              - https://x.com/cuenta_del_centro
+              format: uri
             instagram:
               type: string
               examples:
-              - https://instagram.com/iesramonarcas
+              - https://www.instagram.com/cuenta_del_centro
+              format: uri
             youtube:
               type: string
               examples:
-              - https://youtube.com/c/IESRamonArcasMeca
+              - https://www.youtube.com/@cuenta_del_centro
+              format: uri
             facebook:
               type: string
               examples:
-              - https://facebook.com/iesramonarcasmeca
+              - https://www.facebook.com/cuenta_del_centro
+              format: uri
         lema:
           type: string
           examples:
@@ -4657,12 +4659,12 @@ components:
         telefono:
           type: string
           examples:
-          - +34 968 42 12 34
+          - +34 968 47 70 56
         email:
           type: string
           format: email
           examples:
-          - 30006184@murciaeduca.es
+          - centro@iesramonarcas.es
         horario_atencion:
           type: string
           examples:
@@ -4670,15 +4672,15 @@ components:
         direccion:
           type: string
           examples:
-          - Alameda de Cervantes, s/n
+          - Avda. Juan Carlos I, 72
         codigo_postal:
           type: string
           examples:
-          - '30850'
+          - '30800'
         localidad:
           type: string
           examples:
-          - Totana
+          - Lorca
         provincia:
           type: string
           examples:
@@ -4689,30 +4691,34 @@ components:
             latitud:
               type: number
               examples:
-              - 37.771234
+              - 37.6765
             longitud:
               type: number
               examples:
-              - -1.503456
+              - -1.6985
         redes_sociales:
           type: object
           properties:
             twitter:
               type: string
               examples:
-              - https://twitter.com/iesramonarcas
+              - https://x.com/cuenta_del_centro
+              format: uri
             instagram:
               type: string
               examples:
-              - https://instagram.com/iesramonarcas
+              - https://www.instagram.com/cuenta_del_centro
+              format: uri
             youtube:
               type: string
               examples:
-              - https://youtube.com/c/IESRamonArcasMeca
+              - https://www.youtube.com/@cuenta_del_centro
+              format: uri
             facebook:
               type: string
               examples:
-              - https://facebook.com/iesramonarcasmeca
+              - https://www.facebook.com/cuenta_del_centro
+              format: uri
         lema:
           type: string
           examples:
@@ -5012,7 +5018,7 @@ components:
           type: string
           examples:
           - Trámite finalizado con éxito. Título retirado por el interesado.
-    PaginatedSolicitudesSecretaria:
+    PaginaSolicitudesSecretaria:
       type: object
       required:
       - items
@@ -5137,7 +5143,7 @@ components:
           type: string
           format: email
           examples:
-          - admin@iesramonarcasmeca.es
+          - admin@example.org
         password:
           type: string
           format: password
@@ -5176,7 +5182,7 @@ components:
           type: string
           format: email
           examples:
-          - admin@iesramonarcasmeca.es
+          - admin@example.org
         rol:
           type: string
           enum:

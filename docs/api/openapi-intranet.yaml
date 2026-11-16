@@ -7,7 +7,7 @@ info:
     \ IES Ramón Arcas Meca (Lorca, Murcia)  \n**Ciclo Formativo:** 2º CFGS Desarrollo\
     \ de Aplicaciones Web (DAW2) - Curso 2026/2027  \n**Proyecto:** Proyecto Intermodular\
     \ - Producto 1 (Intranet Privada de Gestión Docente)\n\n### Arquitectura del Sistema\n\
-    - **Backend:** FastAPI (Python 3.11+) con arquitectura limpia modular.\n- **Base\
+    - **Backend:** FastAPI (Python 3.12) con arquitectura limpia modular.\n- **Base\
     \ de Datos Principal:** MongoDB (Motor NoSQL) para persistencia de usuarios, ausencias,\
     \ guardias, horarios, tickets, aulas y auditoría.\n- **Caché y Tareas Asíncronas:**\
     \ Redis para aceleración de consultas, sesiones y cola ligera de tareas en segundo\
@@ -17,9 +17,9 @@ info:
     \ + pywebpush) y correo electrónico transaccional vía SMTP/fastapi-mail.\n- **Mapas\
     \ y Geocodificación:** Leaflet + OpenStreetMap + Nominatim para el seguimiento\
     \ geográfico de Formación en Empresas (FEM).\n- **Servicios Externos:** Google\
-    \ Workspace OAuth2 y Google Calendar API para sincronización bidireccional de\
-    \ horarios.\n\n### Convenciones REST Obligatorias\n- **Versionado:** Todas las\
-    \ rutas incorporan el prefijo `/api/v1/`.\n- **Nomenclatura:** Rutas en español,\
+    \ OAuth 2.0 (cualquier cuenta de Google) y Google Calendar API para sincronización\
+    \ de horarios.\n\n### Convenciones REST Obligatorias\n- **Versionado:** Todas\
+    \ las rutas incorporan el prefijo `/api/v1/`.\n- **Nomenclatura:** Rutas en español,\
     \ sustantivos en plural y minúsculas separadas por guiones.\n- **Paginación uniforme:**\
     \ Parámetros de consulta `?page=1&limit=10` (por defecto `page=1`, `limit=10`,\
     \ máximo `50`).\n  Respuesta paginada: `{\"items\": [...], \"page\": 1, \"limit\"\
@@ -35,17 +35,16 @@ info:
     \ `direccion`.\n"
   version: 1.0.0
   contact:
-    name: Equipo de Arquitectura DAW2 - IES Ramón Arcas Meca
-    email: daw2@iesramonarcas.es
-    url: https://iesramonarcas.es
+    name: José Iver Peñarrieta y Francisco Guerrero (2º DAW)
+    url: https://github.com/DAW2ProyectoIntermodular/ProyectoIntermodular
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
 servers:
 - url: http://localhost:8000
-  description: Servidor Local de Desarrollo (FastAPI + Uvicorn)
+  description: Desarrollo local (FastAPI + Uvicorn)
 - url: https://intranet.iesramonarcas.es
-  description: Entorno de Producción Oficial - IES Ramón Arcas Meca
+  description: Producción (dominio propuesto, pendiente de confirmar con el centro)
 tags:
 - name: Autenticación
   description: Control de sesiones, autenticación federada con Google OAuth2 e intercambio
@@ -56,7 +55,7 @@ tags:
 - name: Departamentos
   description: Departamentos didácticos y de familias profesionales del centro.
 - name: Tablón de Anuncios
-  description: Comunicación interna segmentada por departamento o ámbito general,
+  description: Comunicación interna segmentada por departamento, curso o ámbito general,
     con caducidad lógica y destacados.
 - name: Notificaciones
   description: Bandeja de notificaciones internas y suscripción a notificaciones push
@@ -113,22 +112,26 @@ tags:
   description: Guía de bienvenida para nuevos docentes con lista interactiva de tareas
     y vídeos formativos.
 - name: Google Calendar
-  description: Sincronización bidireccional del horario docente y guardias con el
-    calendario institucional de Google.
+  description: Sincronización del horario docente y guardias con el calendario institucional
+    de Google.
 paths:
   /api/v1/auth/login/google:
     post:
       tags:
       - Autenticación
       summary: Iniciar sesión con Google OAuth2
-      description: 'Autentica a un docente mediante un token o código de autorización
-        emitido por Google Workspace.
+      description: 'Autentica a un docente con el token de identidad (o código de
+        autorización) que devuelve Google.
 
-        Si el usuario no existe previamente en el sistema, se crea automáticamente
-        con estado `pendiente_confirmacion`
 
-        a la espera de ser aprobado por la dirección/administración. Devuelve el par
-        de tokens JWT (`access_token` y `refresh_token`).
+        Se admite cualquier cuenta de Google, sin restricción de dominio.
+
+
+        - Si el usuario existe y está activo, devuelve el par de tokens JWT (`access_token`
+        y `refresh_token`).
+
+        - Si el usuario no existía, se registra automáticamente con estado `pendiente_confirmacion`
+        y se responde `403` hasta que un administrador apruebe el alta.
 
         '
       operationId: autenticarConGoogle
@@ -150,7 +153,8 @@ paths:
         '401':
           $ref: '#/components/responses/Respuesta401'
         '403':
-          description: Usuario pendiente de confirmación o desactivado por administración.
+          description: Usuario pendiente de confirmación (incluido el que se acaba
+            de autorregistrar) o desactivado.
           content:
             application/json:
               schema:
@@ -322,7 +326,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedUsuarios'
+                $ref: '#/components/schemas/PaginaUsuarios'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '403':
@@ -576,7 +580,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedDepartamentos'
+                $ref: '#/components/schemas/PaginaDepartamentos'
         '401':
           $ref: '#/components/responses/Respuesta401'
     post:
@@ -691,8 +695,8 @@ paths:
       tags:
       - Tablón de Anuncios
       summary: Listar anuncios del tablón
-      description: 'Feed de anuncios segmentado por ámbito (general o departamental),
-        departamento y estado destacado.
+      description: 'Feed de anuncios segmentado por ámbito (general, departamental
+        o curso), departamento y estado destacado.
 
         Aplica borrado lógico para anuncios caducados a menos que se especifique `incluir_caducados=true`
         con permisos directivos.
@@ -719,8 +723,18 @@ paths:
           enum:
           - general
           - departamental
+          - curso
           examples:
           - general
+      - name: curso
+        in: query
+        required: false
+        description: Filtrar anuncios dirigidos a un curso o grupo concreto
+        schema:
+          type: string
+        examples:
+          ejemplo:
+            value: 2º DAW
       - name: destacado
         in: query
         required: false
@@ -744,7 +758,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedAnuncios'
+                $ref: '#/components/schemas/PaginaAnuncios'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '422':
@@ -964,7 +978,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedNotificaciones'
+                $ref: '#/components/schemas/PaginaNotificaciones'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '422':
@@ -1171,7 +1185,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedPublicacionesRrss'
+                $ref: '#/components/schemas/PaginaPublicacionesRrss'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '422':
@@ -1563,7 +1577,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedGuardias'
+                $ref: '#/components/schemas/PaginaGuardias'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '422':
@@ -1595,7 +1609,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedGuardias'
+                $ref: '#/components/schemas/PaginaGuardias'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '422':
@@ -1779,7 +1793,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedAusencias'
+                $ref: '#/components/schemas/PaginaAusencias'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '422':
@@ -1846,7 +1860,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedAusencias'
+                $ref: '#/components/schemas/PaginaAusencias'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '422':
@@ -2137,7 +2151,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedAulas'
+                $ref: '#/components/schemas/PaginaAulas'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '422':
@@ -2536,7 +2550,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedRetrasos'
+                $ref: '#/components/schemas/PaginaRetrasos'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '422':
@@ -2716,7 +2730,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedConvivencia'
+                $ref: '#/components/schemas/PaginaConvivencia'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '403':
@@ -2942,7 +2956,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedTickets'
+                $ref: '#/components/schemas/PaginaTickets'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '422':
@@ -3004,7 +3018,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedTickets'
+                $ref: '#/components/schemas/PaginaTickets'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '422':
@@ -3288,7 +3302,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedDocumentos'
+                $ref: '#/components/schemas/PaginaDocumentos'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '422':
@@ -3622,7 +3636,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedReservas'
+                $ref: '#/components/schemas/PaginaReservas'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '422':
@@ -3806,7 +3820,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedComisiones'
+                $ref: '#/components/schemas/PaginaComisiones'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '422':
@@ -3862,7 +3876,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedComisiones'
+                $ref: '#/components/schemas/PaginaComisiones'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '422':
@@ -4053,12 +4067,12 @@ paths:
       - name: municipio
         in: query
         required: false
-        description: Municipio de radicación de la empresa (p.ej. Totana, Lorca, Alhama,
-          Murcia)
+        description: Municipio de radicación de la empresa (p.ej. Puerto Lumbreras,
+          Lorca, Alhama, Murcia)
         schema:
           type: string
           examples:
-          - Totana
+          - Puerto Lumbreras
       - name: ciclo_id
         in: query
         required: false
@@ -4075,7 +4089,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedEmpresasFEM'
+                $ref: '#/components/schemas/PaginaEmpresasFEM'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '422':
@@ -4266,7 +4280,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedAlumnosFEM'
+                $ref: '#/components/schemas/PaginaAlumnosFEM'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '422':
@@ -4610,7 +4624,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedAuditoria'
+                $ref: '#/components/schemas/PaginaAuditoria'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '403':
@@ -4715,7 +4729,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedSolicitudesRGPD'
+                $ref: '#/components/schemas/PaginaSolicitudesRGPD'
         '401':
           $ref: '#/components/responses/Respuesta401'
         '403':
@@ -4835,6 +4849,13 @@ paths:
           $ref: '#/components/responses/Respuesta403'
         '404':
           $ref: '#/components/responses/Respuesta404'
+        '409':
+          description: Transición de estado no válida (por ejemplo, reabrir una solicitud
+            ya resuelta).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetalle'
         '422':
           $ref: '#/components/responses/Respuesta422'
   /api/v1/rgpd/accesos-sensibles:
@@ -5158,27 +5179,13 @@ components:
       scheme: bearer
       bearerFormat: JWT
       description: 'Token de acceso JWT (Access Token) firmado mediante HMAC-SHA256
-        con tiempo de vida corto (15 minutos).
+        con tiempo de vida corto (30 minutos).
 
         Debe enviarse en la cabecera HTTP: `Authorization: Bearer <access_token>`.
 
         Contiene los claims del usuario: `sub` (ID usuario), `email`, `roles` y `exp`.
 
         '
-    oauth2Google:
-      type: oauth2
-      description: Flujo de autorización federada mediante Google Workspace del centro
-        docente.
-      flows:
-        authorizationCode:
-          authorizationUrl: https://accounts.google.com/o/oauth2/v2/auth
-          tokenUrl: https://oauth2.googleapis.com/token
-          scopes:
-            openid: Identificador único del usuario
-            email: Dirección de correo institucional (@iesramonarcas.es)
-            profile: Nombre, apellidos y fotografía de perfil
-            https://www.googleapis.com/auth/calendar.events: Gestión de eventos en
-              Google Calendar
   parameters:
     PaginaParam:
       name: page
@@ -5208,7 +5215,7 @@ components:
       description: URI canónica del recurso recién creado
       schema:
         type: string
-        format: uri
+        format: uri-reference
         examples:
         - /api/v1/usuarios/660e1d8f1b2c3d4e5f6a7b8c
   responses:
@@ -5245,17 +5252,6 @@ components:
             ejemplo:
               value:
                 detail: El recurso solicitado no fue encontrado.
-    Respuesta409:
-      description: Conflicto de estado. Inconsistencia, solapamiento horario o transición
-        de estado no permitida.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorDetalle'
-          examples:
-            ejemplo:
-              value:
-                detail: Conflicto con el estado actual del recurso.
     Respuesta422:
       description: Entidad no procesable. Error de validación en los parámetros o
         cuerpo de la petición (Pydantic).
@@ -5323,9 +5319,9 @@ components:
           - bearer
         expires_in:
           type: integer
-          description: Tiempo de expiración del access token en segundos (15 minutos).
+          description: Tiempo de expiración del access token en segundos (30 minutos).
           examples:
-          - 900
+          - 1800
       required:
       - access_token
       - refresh_token
@@ -5378,7 +5374,7 @@ components:
           type: string
           format: email
           examples:
-          - antonio.sanchez@iesramonarcas.es
+          - antonio.sanchez@example.org
         nombre:
           type: string
           examples:
@@ -5475,7 +5471,7 @@ components:
           type: string
           format: email
           examples:
-          - maria.garcia@iesramonarcas.es
+          - maria.garcia@example.org
         nombre:
           type: string
           examples:
@@ -5532,7 +5528,7 @@ components:
           type: string
           format: email
           examples:
-          - maria.garcia@iesramonarcas.es
+          - maria.garcia@example.org
         nombre:
           type: string
           examples:
@@ -5644,7 +5640,7 @@ components:
             - jefatura_estudios
       required:
       - roles
-    PaginatedUsuarios:
+    PaginaUsuarios:
       type: object
       description: Contenedor estándar paginado para la colección de usuarios.
       properties:
@@ -5735,7 +5731,7 @@ components:
       required:
       - codigo
       - nombre
-    PaginatedDepartamentos:
+    PaginaDepartamentos:
       type: object
       properties:
         items:
@@ -5893,7 +5889,7 @@ components:
           type: boolean
           examples:
           - false
-    PaginatedAnuncios:
+    PaginaAnuncios:
       type: object
       properties:
         items:
@@ -6032,7 +6028,7 @@ components:
       - usuario_id
       - endpoint
       - fecha_creacion
-    PaginatedNotificaciones:
+    PaginaNotificaciones:
       type: object
       properties:
         items:
@@ -6249,7 +6245,7 @@ components:
           - Publicado en Instagram y LinkedIn a las 12:30.
       required:
       - estado
-    PaginatedPublicacionesRrss:
+    PaginaPublicacionesRrss:
       type: object
       properties:
         items:
@@ -6743,7 +6739,7 @@ components:
       - docente_id
       - docente_nombre
       - guardias_realizadas_en_hueco
-    PaginatedGuardias:
+    PaginaGuardias:
       type: object
       properties:
         items:
@@ -6974,7 +6970,7 @@ components:
           - null
       required:
       - tipo_firma
-    PaginatedAusencias:
+    PaginaAusencias:
       type: object
       properties:
         items:
@@ -7222,7 +7218,7 @@ components:
       - filas
       - columnas
       - pupitres
-    PaginatedAulas:
+    PaginaAulas:
       type: object
       properties:
         items:
@@ -7366,7 +7362,7 @@ components:
       - fecha
       - hueco_horario
       - minutos_retraso
-    PaginatedRetrasos:
+    PaginaRetrasos:
       type: object
       properties:
         items:
@@ -7548,7 +7544,7 @@ components:
           - Completó la lectura sin incidencias.
       required:
       - estado
-    PaginatedConvivencia:
+    PaginaConvivencia:
       type: object
       properties:
         items:
@@ -7782,7 +7778,7 @@ components:
       - tamano_bytes
       - tipo_mime
       - fecha_subida
-    PaginatedTickets:
+    PaginaTickets:
       type: object
       properties:
         items:
@@ -7914,7 +7910,7 @@ components:
       required:
       - titulo
       - categoria
-    PaginatedDocumentos:
+    PaginaDocumentos:
       type: object
       properties:
         items:
@@ -8223,7 +8219,7 @@ components:
       - hora_inicio
       - hora_fin
       - motivo
-    PaginatedReservas:
+    PaginaReservas:
       type: object
       properties:
         items:
@@ -8396,7 +8392,7 @@ components:
           - Autorizado el desplazamiento por el Director.
       required:
       - estado
-    PaginatedComisiones:
+    PaginaComisiones:
       type: object
       properties:
         items:
@@ -8448,21 +8444,21 @@ components:
         municipio:
           type: string
           examples:
-          - Totana
+          - Puerto Lumbreras
         codigo_postal:
           type: string
           examples:
-          - '30850'
+          - '30890'
         latitud:
           type: number
           description: Coordenada latitud geocodificada por Nominatim
           examples:
-          - 37.7654
+          - 37.563
         longitud:
           type: number
           description: Coordenada longitud geocodificada por Nominatim
           examples:
-          - -1.5021
+          - -1.809
         telefono:
           type: string
           examples:
@@ -8471,7 +8467,7 @@ components:
           type: string
           format: email
           examples:
-          - rrhh@tecnologiasdelsureste.com
+          - rrhh@example.com
         persona_contacto:
           type: string
           examples:
@@ -8525,11 +8521,11 @@ components:
         municipio:
           type: string
           examples:
-          - Totana
+          - Puerto Lumbreras
         codigo_postal:
           type: string
           examples:
-          - '30850'
+          - '30890'
         telefono:
           type: string
           examples:
@@ -8538,7 +8534,7 @@ components:
           type: string
           format: email
           examples:
-          - rrhh@tecnologiasdelsureste.com
+          - rrhh@example.com
         persona_contacto:
           type: string
           examples:
@@ -8756,8 +8752,8 @@ components:
                     items:
                       type: number
                     examples:
-                    - - -1.5021
-                      - 37.7654
+                    - - -1.809
+                      - 37.563
               properties:
                 type: object
                 properties:
@@ -8772,7 +8768,7 @@ components:
                   municipio:
                     type: string
                     examples:
-                    - Totana
+                    - Puerto Lumbreras
                   estado:
                     type: string
                     examples:
@@ -8784,7 +8780,7 @@ components:
       required:
       - type
       - features
-    PaginatedEmpresasFEM:
+    PaginaEmpresasFEM:
       type: object
       properties:
         items:
@@ -8808,7 +8804,7 @@ components:
       - page
       - limit
       - total
-    PaginatedAlumnosFEM:
+    PaginaAlumnosFEM:
       type: object
       properties:
         items:
@@ -8976,7 +8972,7 @@ components:
                   municipio:
                     type: string
                     examples:
-                    - Totana
+                    - Puerto Lumbreras
                   activas:
                     type: integer
                     examples:
@@ -9118,7 +9114,7 @@ components:
         usuario_email:
           type: string
           examples:
-          - admin@iesramonarcas.es
+          - admin@example.org
         accion:
           type: string
           examples:
@@ -9160,7 +9156,7 @@ components:
       - recurso
       - ip_origen
       - fecha_hora
-    PaginatedAuditoria:
+    PaginaAuditoria:
       type: object
       properties:
         items:
@@ -9315,7 +9311,7 @@ components:
       - motivo_detalle
       - estado
       - fecha_solicitud
-    PaginatedSolicitudesRGPD:
+    PaginaSolicitudesRGPD:
       type: object
       properties:
         items:
