@@ -441,6 +441,13 @@ paths:
           $ref: '#/components/responses/Respuesta403'
         '404':
           $ref: '#/components/responses/Respuesta404'
+        '409':
+          description: Correo ya registrado, transición de estado inválida o intento
+            de bloquear la propia cuenta de administrador.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetalle'
         '422':
           $ref: '#/components/responses/Respuesta422'
     patch:
@@ -519,6 +526,13 @@ paths:
           $ref: '#/components/responses/Respuesta403'
         '404':
           $ref: '#/components/responses/Respuesta404'
+        '409':
+          description: Un administrador no puede desactivar, eliminar ni quitar el
+            rol de administrador a su propia cuenta.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetalle'
         '422':
           $ref: '#/components/responses/Respuesta422'
   /api/v1/usuarios/{usuario_id}/roles:
@@ -559,6 +573,13 @@ paths:
           $ref: '#/components/responses/Respuesta403'
         '404':
           $ref: '#/components/responses/Respuesta404'
+        '409':
+          description: Un administrador no puede desactivar, eliminar ni quitar el
+            rol de administrador a su propia cuenta.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetalle'
         '422':
           $ref: '#/components/responses/Respuesta422'
   /api/v1/departamentos:
@@ -688,6 +709,12 @@ paths:
           $ref: '#/components/responses/Respuesta403'
         '404':
           $ref: '#/components/responses/Respuesta404'
+        '409':
+          description: Ya existe otro departamento con ese código.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetalle'
         '422':
           $ref: '#/components/responses/Respuesta422'
   /api/v1/anuncios:
