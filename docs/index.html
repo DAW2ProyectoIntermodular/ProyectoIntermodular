@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Swagger UI CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css">
+    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.35.0/swagger-ui.css">
 
     <style>
         :root {
@@ -645,7 +645,7 @@
             <div class="hero-header">
                 <div class="hero-title-area">
                     <div class="pill-badge">
-                        <span>●</span> Entrega 1 Oficial (30 de octubre)
+                        <span>●</span> Especificación v1.0
                     </div>
                     <h2>Especificación Técnica de APIs REST</h2>
                     <p>
@@ -672,7 +672,7 @@
 
         <div class="search-box-container" id="search-container">
             <span class="search-icon">🔍</span>
-            <input type="text" id="endpoint-search" class="search-input" placeholder="Buscar por ruta, verbo o módulo (ej: /guardias, POST)..." oninput="filterEndpoints()">
+            <input type="text" id="endpoint-search" class="search-input" placeholder="Buscar por ruta, método o módulo (ej: /guardias, POST)..." oninput="filterEndpoints()">
         </div>
     </div>
 
@@ -710,8 +710,8 @@
                 <span>Desarrollado por José Iver Peñarrieta y Francisco Guerrero · 2º DAW2</span>
             </div>
             <div class="footer-links">
-                <a href="./docs/api/openapi-intranet.yaml" target="_blank">openapi-intranet.yaml</a>
-                <a href="./docs/api/openapi-web.yaml" target="_blank">openapi-web.yaml</a>
+                <a href="./api/openapi-intranet.yaml" target="_blank">openapi-intranet.yaml</a>
+                <a href="./api/openapi-web.yaml" target="_blank">openapi-web.yaml</a>
                 <a href="cheatsheet.html" target="_blank">Cheatsheet A3</a>
                 <a href="https://github.com/DAW2ProyectoIntermodular/ProyectoIntermodular" target="_blank">Repositorio GitHub</a>
             </div>
@@ -719,430 +719,53 @@
     </footer>
 
     <!-- SCRIPTS -->
-    <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+    <script src="https://unpkg.com/swagger-ui-dist@5.35.0/swagger-ui-bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
     <script>
         // ==========================================
         // CATÁLOGO CANÓNICO DE ENDPOINTS
         // ==========================================
-        const apiData = {
-            intranet: {
-                title: "Intranet de Gestión Docente",
-                stack: "FastAPI · MongoDB · Redis · JWT Bearer",
-                groups: [
-                    {
-                        name: "🔐 1. Autenticación y Sesiones",
-                        endpoints: [
-                            { method: "POST", path: "/api/v1/auth/login/google", desc: "Intercambio de credencial Google OAuth por tokens JWT" },
-                            { method: "POST", path: "/api/v1/auth/refresh", desc: "Renovación de access token mediante refresh token" },
-                            { method: "POST", path: "/api/v1/auth/logout", desc: "Invalidación explícita de refresh token en Redis" }
-                        ]
-                    },
-                    {
-                        name: "👤 2. Claustro y Gestión de Usuarios",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/usuarios/me", desc: "Perfil confidencial del docente autenticado" },
-                            { method: "PUT", path: "/api/v1/usuarios/me", desc: "Actualización de preferencias y datos propios" },
-                            { method: "GET", path: "/api/v1/usuarios", desc: "Listado de docentes con filtros de estado y rol" },
-                            { method: "GET", path: "/api/v1/usuarios/{usuario_id}", desc: "Ficha técnica completa de un docente" },
-                            { method: "POST", path: "/api/v1/usuarios", desc: "Alta manual administrativa de nuevo personal" },
-                            { method: "PUT", path: "/api/v1/usuarios/{usuario_id}", desc: "Modificación integral de expediente docente" },
-                            { method: "PATCH", path: "/api/v1/usuarios/{usuario_id}", desc: "Aprobación de autorregistro o cambio de estado" },
-                            { method: "DELETE", path: "/api/v1/usuarios/{usuario_id}", desc: "Baja lógica de usuario del sistema" },
-                            { method: "PUT", path: "/api/v1/usuarios/{usuario_id}/roles", desc: "Asignación granular de roles RBAC" }
-                        ]
-                    },
-                    {
-                        name: "🏢 3. Departamentos Didácticos",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/departamentos", desc: "Listar departamentos didácticos y familias" },
-                            { method: "GET", path: "/api/v1/departamentos/{departamento_id}", desc: "Detalle y miembros de departamento" },
-                            { method: "POST", path: "/api/v1/departamentos", desc: "Creación de nuevo departamento didáctico" },
-                            { method: "PUT", path: "/api/v1/departamentos/{departamento_id}", desc: "Actualización de jefatura y denominación" }
-                        ]
-                    },
-                    {
-                        name: "📢 4. Tablón de Anuncios",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/anuncios", desc: "Feed segmentado por ámbito con caducidad lógica" },
-                            { method: "POST", path: "/api/v1/anuncios", desc: "Publicación de aviso institucional o departamental" },
-                            { method: "GET", path: "/api/v1/anuncios/{anuncio_id}", desc: "Lectura completa de aviso y adjuntos" },
-                            { method: "PUT", path: "/api/v1/anuncios/{anuncio_id}", desc: "Edición completa de contenido de anuncio" },
-                            { method: "PATCH", path: "/api/v1/anuncios/{anuncio_id}", desc: "Fijar como destacado o caducar manualmente" },
-                            { method: "DELETE", path: "/api/v1/anuncios/{anuncio_id}", desc: "Eliminación lógica de aviso" }
-                        ]
-                    },
-                    {
-                        name: "🔔 5. Notificaciones (Web Push / Email)",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/notificaciones", desc: "Bandeja de avisos del usuario con paginación" },
-                            { method: "PATCH", path: "/api/v1/notificaciones/{notificacion_id}", desc: "Marcar aviso específico como leído" },
-                            { method: "PATCH", path: "/api/v1/notificaciones/leer-todas", desc: "Marcar todas las alertas pendientes como leídas" },
-                            { method: "POST", path: "/api/v1/notificaciones/suscripcion-push", desc: "Registro de suscripción VAPID para Service Worker" },
-                            { method: "DELETE", path: "/api/v1/notificaciones/suscripcion-push", desc: "Baja de endpoint push pasando URI en query" }
-                        ]
-                    },
-                    {
-                        name: "📱 6. Difusión en RRSS con IA",
-                        endpoints: [
-                            { method: "POST", path: "/api/v1/publicaciones-rrss/generar-texto", desc: "Invocación a modelo de IA para redactar copys" },
-                            { method: "POST", path: "/api/v1/publicaciones-rrss", desc: "Registro de ticket de publicación para admin RRSS" },
-                            { method: "GET", path: "/api/v1/publicaciones-rrss", desc: "Cola de solicitudes de difusión pendientes" },
-                            { method: "GET", path: "/api/v1/publicaciones-rrss/{publicacion_id}", desc: "Detalle con imágenes adjuntas y copy generado" },
-                            { method: "PATCH", path: "/api/v1/publicaciones-rrss/{publicacion_id}", desc: "Transición de estado de publicación" }
-                        ]
-                    },
-                    {
-                        name: "🕐 7. Horarios y Comparador",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/horarios/me", desc: "Horario semanal individual y reducciones horarias" },
-                            { method: "GET", path: "/api/v1/horarios/{usuario_id}", desc: "Consulta de horario docente por jefatura" },
-                            { method: "POST", path: "/api/v1/horarios", desc: "Creación de bloques lectivos y complementarios" },
-                            { method: "PUT", path: "/api/v1/horarios/{usuario_id}", desc: "Reemplazo completo de parrilla horaria" },
-                            { method: "POST", path: "/api/v1/horarios/comparar", desc: "Cálculo de intersección de huecos libres para reunión" }
-                        ]
-                    },
-                    {
-                        name: "🛡️ 8. Asignación de Guardias por Rondas",
-                        endpoints: [
-                            { method: "POST", path: "/api/v1/guardias/asignar", desc: "Ejecución del algoritmo estricto de rondas por hueco" },
-                            { method: "GET", path: "/api/v1/guardias", desc: "Consulta de cuadrante de guardias por fecha y hora" },
-                            { method: "GET", path: "/api/v1/guardias/me", desc: "Guardias asignadas al docente autenticado" },
-                            { method: "GET", path: "/api/v1/guardias/{guardia_id}", desc: "Detalle de cobertura y profesorado implicado" },
-                            { method: "PATCH", path: "/api/v1/guardias/{guardia_id}", desc: "Registro de sustitución (docente_que_realiza)" },
-                            { method: "GET", path: "/api/v1/guardias/contadores", desc: "Auditoría de contadores por tramo para transparencia" }
-                        ]
-                    },
-                    {
-                        name: "📋 9. Flujo de Ausencias y Firma",
-                        endpoints: [
-                            { method: "POST", path: "/api/v1/ausencias", desc: "Notificación de falta (genérica/administrativa/extraescolar)" },
-                            { method: "GET", path: "/api/v1/ausencias", desc: "Histórico general de ausencias del centro" },
-                            { method: "GET", path: "/api/v1/ausencias/me", desc: "Mis ausencias registradas y estado de tramitación" },
-                            { method: "GET", path: "/api/v1/ausencias/{ausencia_id}", desc: "Ficha de ausencia con justificantes asociados" },
-                            { method: "PATCH", path: "/api/v1/ausencias/{ausencia_id}", desc: "Aportar justificación motivada de la falta" },
-                            { method: "POST", path: "/api/v1/ausencias/{ausencia_id}/justificante", desc: "Subida de archivo médico/oficial en multipart" },
-                            { method: "GET", path: "/api/v1/ausencias/{ausencia_id}/pdf", desc: "Generación automática de PDF con WeasyPrint" },
-                            { method: "POST", path: "/api/v1/ausencias/{ausencia_id}/firmar", desc: "Incrustación de firma manuscrita digitalizada" },
-                            { method: "DELETE", path: "/api/v1/ausencias/{ausencia_id}", desc: "Cancelación de ausencia antes de su inicio" }
-                        ]
-                    },
-                    {
-                        name: "🏫 10. Aulas y Emplazamiento",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/aulas", desc: "Directorio de aulas, talleres y laboratorios" },
-                            { method: "POST", path: "/api/v1/aulas", desc: "Alta de nuevo espacio docente en inventario" },
-                            { method: "GET", path: "/api/v1/aulas/{aula_id}", desc: "Capacidad y equipamiento del aula" },
-                            { method: "PUT", path: "/api/v1/aulas/{aula_id}", desc: "Modificación de características del aula" },
-                            { method: "DELETE", path: "/api/v1/aulas/{aula_id}", desc: "Baja de espacio físico" },
-                            { method: "GET", path: "/api/v1/aulas/{aula_id}/disposiciones", desc: "Listar diseños de pupitres guardados" },
-                            { method: "POST", path: "/api/v1/aulas/{aula_id}/disposiciones", desc: "Crear layout de aula asociado a grupo/módulo" },
-                            { method: "GET", path: "/api/v1/aulas/{aula_id}/disposiciones/{disposicion_id}", desc: "Detalle de distribución de pupitres y alumnos" },
-                            { method: "PUT", path: "/api/v1/aulas/{aula_id}/disposiciones/{disposicion_id}", desc: "Actualizar mapa de asientos del aula" },
-                            { method: "DELETE", path: "/api/v1/aulas/{aula_id}/disposiciones/{disposicion_id}", desc: "Eliminar disposición de aula" }
-                        ]
-                    },
-                    {
-                        name: "⏰ 11. Registro de Retrasos",
-                        endpoints: [
-                            { method: "POST", path: "/api/v1/retrasos", desc: "Anotar retraso de estudiante en clase concreta" },
-                            { method: "GET", path: "/api/v1/retrasos", desc: "Histórico acumulado individual por estudiante" },
-                            { method: "GET", path: "/api/v1/retrasos/{retraso_id}", desc: "Detalle de fecha, hora y módulo del retraso" },
-                            { method: "PUT", path: "/api/v1/retrasos/{retraso_id}", desc: "Rectificación de retraso imputado por error" },
-                            { method: "DELETE", path: "/api/v1/retrasos/{retraso_id}", desc: "Anulación de retraso" }
-                        ]
-                    },
-                    {
-                        name: "🤝 12. Aula de Convivencia",
-                        endpoints: [
-                            { method: "POST", path: "/api/v1/convivencia", desc: "Derivación disciplinaria con tarea académica" },
-                            { method: "GET", path: "/api/v1/convivencia", desc: "Listado de alumnado derivado por jornada" },
-                            { method: "GET", path: "/api/v1/convivencia/me", desc: "Alumnado presente durante mi guardia asignada" },
-                            { method: "GET", path: "/api/v1/convivencia/{derivacion_id}", desc: "Ficha disciplinaria y trabajo escolar asignado" },
-                            { method: "PUT", path: "/api/v1/convivencia/{derivacion_id}", desc: "Actualización de observaciones de convivencia" },
-                            { method: "DELETE", path: "/api/v1/convivencia/{derivacion_id}", desc: "Retirada de derivación al aula" }
-                        ]
-                    },
-                    {
-                        name: "🎫 13. Sistema de Tickets (RMI / Compras)",
-                        endpoints: [
-                            { method: "POST", path: "/api/v1/tickets", desc: "Creación unificada de incidencia RMI o compra" },
-                            { method: "GET", path: "/api/v1/tickets", desc: "Bandeja de solicitudes filtradas por tipo y estado" },
-                            { method: "GET", path: "/api/v1/tickets/me", desc: "Histórico de peticiones registradas por el usuario" },
-                            { method: "GET", path: "/api/v1/tickets/{ticket_id}", desc: "Detalle técnico, presupuestos y estado" },
-                            { method: "PATCH", path: "/api/v1/tickets/{ticket_id}", desc: "Transición de estado y asignación de responsable" },
-                            { method: "PUT", path: "/api/v1/tickets/{ticket_id}", desc: "Actualización integral de datos del ticket" },
-                            { method: "DELETE", path: "/api/v1/tickets/{ticket_id}", desc: "Cancelación de ticket de solicitud" },
-                            { method: "POST", path: "/api/v1/tickets/{ticket_id}/adjuntos", desc: "Subida de factura, presupuesto o evidencia" },
-                            { method: "GET", path: "/api/v1/tickets/{ticket_id}/adjuntos", desc: "Lista de archivos vinculados a la petición" }
-                        ]
-                    },
-                    {
-                        name: "📁 14. Repositorio Documental",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/documentos", desc: "Documentos filtrados por departamento y proyectos" },
-                            { method: "POST", path: "/api/v1/documentos", desc: "Subida de programaciones didácticas o actas" },
-                            { method: "GET", path: "/api/v1/documentos/{documento_id}", desc: "Descarga de documento oficial" },
-                            { method: "PUT", path: "/api/v1/documentos/{documento_id}", desc: "Actualización de metadatos del archivo" },
-                            { method: "DELETE", path: "/api/v1/documentos/{documento_id}", desc: "Eliminación de documento" }
-                        ]
-                    },
-                    {
-                        name: "📅 15. Reservas de Espacios y Recursos",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/reservas", desc: "Consulta de ocupación de salón de actos y aulas TIC" },
-                            { method: "POST", path: "/api/v1/reservas", desc: "Reserva de recurso con detección de solapamiento (409)" },
-                            { method: "GET", path: "/api/v1/reservas/{reserva_id}", desc: "Detalle y responsable de la reserva" },
-                            { method: "PUT", path: "/api/v1/reservas/{reserva_id}", desc: "Modificación de horario de reserva" },
-                            { method: "DELETE", path: "/api/v1/reservas/{reserva_id}", desc: "Liberación anticipada de espacio o recurso" },
-                            { method: "GET", path: "/api/v1/espacios", desc: "Catálogo de espacios reservables del centro" },
-                            { method: "POST", path: "/api/v1/espacios", desc: "Alta de nuevo espacio reservable" },
-                            { method: "GET", path: "/api/v1/recursos", desc: "Inventario de carritos de portátiles y proyectores" },
-                            { method: "POST", path: "/api/v1/recursos", desc: "Alta de nuevo equipamiento móvil" }
-                        ]
-                    },
-                    {
-                        name: "📝 16. Comisiones de Servicio",
-                        endpoints: [
-                            { method: "POST", path: "/api/v1/comisiones", desc: "Solicitud oficial de desplazamiento para formación" },
-                            { method: "GET", path: "/api/v1/comisiones", desc: "Listado de comisiones para jefatura de estudios" },
-                            { method: "GET", path: "/api/v1/comisiones/me", desc: "Mis comisiones de servicio tramitadas" },
-                            { method: "GET", path: "/api/v1/comisiones/{comision_id}", desc: "Expediente de comisión de servicio" },
-                            { method: "PATCH", path: "/api/v1/comisiones/{comision_id}", desc: "Resolución y autorización directiva" },
-                            { method: "GET", path: "/api/v1/comisiones/{comision_id}/pdf", desc: "Compilación de PDF oficial de comisión" },
-                            { method: "POST", path: "/api/v1/comisiones/{comision_id}/firmar", desc: "Firma biométrica del documento oficial" }
-                        ]
-                    },
-                    {
-                        name: "🏭 17. Seguimiento FEM (500 Horas)",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/fem/empresas", desc: "Directorio de empresas colaboradoras en FP" },
-                            { method: "POST", path: "/api/v1/fem/empresas", desc: "Alta de empresa con geocodificación Nominatim" },
-                            { method: "GET", path: "/api/v1/fem/empresas/{empresa_id}", desc: "Ficha de empresa y coordenadas geográficas" },
-                            { method: "PUT", path: "/api/v1/fem/empresas/{empresa_id}", desc: "Edición de convenio y tutores laborales" },
-                            { method: "PATCH", path: "/api/v1/fem/empresas/{empresa_id}", desc: "Activación o pase a inactiva de la empresa" },
-                            { method: "GET", path: "/api/v1/fem/alumnos", desc: "Alumnado matriculado en FEM del ciclo asignado" },
-                            { method: "POST", path: "/api/v1/fem/alumnos", desc: "Asignación de puesto formativo a estudiante" },
-                            { method: "GET", path: "/api/v1/fem/alumnos/{alumno_id}", desc: "Cómputo de horas cursadas respecto a 500h" },
-                            { method: "PUT", path: "/api/v1/fem/alumnos/{alumno_id}", desc: "Registro de visitas y seguimiento tutorial" },
-                            { method: "GET", path: "/api/v1/fem/mapa", desc: "GeoJSON de centros de trabajo para Leaflet" }
-                        ]
-                    },
-                    {
-                        name: "📊 18. Dashboard del Equipo Directivo",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/dashboard/kpis", desc: "Consolidación de los 9 KPIs obligatorios de dirección" },
-                            { method: "GET", path: "/api/v1/dashboard/kpis/{kpi_nombre}", desc: "Desglose analítico de un KPI específico" },
-                            { method: "GET", path: "/api/v1/dashboard/configuracion", desc: "Consulta de umbrales configurables por dirección" },
-                            { method: "PUT", path: "/api/v1/dashboard/configuracion", desc: "Ajuste dinámico de tasa de retrasos y alertas" }
-                        ]
-                    },
-                    {
-                        name: "🔍 19. Auditoría de Seguridad",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/auditoria", desc: "Log inmutable de acciones críticas del sistema" },
-                            { method: "GET", path: "/api/v1/auditoria/{registro_id}", desc: "Traza forense con IP, agente y payload" }
-                        ]
-                    },
-                    {
-                        name: "🛡️ 20. Cumplimiento RGPD y Menores",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/rgpd/consentimientos/me", desc: "Consentimientos activos de tratamiento de datos" },
-                            { method: "PUT", path: "/api/v1/rgpd/consentimientos/me", desc: "Actualización de preferencias de privacidad" },
-                            { method: "POST", path: "/api/v1/rgpd/solicitudes", desc: "Ejercicio de derechos ARCO por el interesado" },
-                            { method: "GET", path: "/api/v1/rgpd/solicitudes", desc: "Bandeja de solicitudes para el Delegado de Protección" },
-                            { method: "GET", path: "/api/v1/rgpd/solicitudes/{solicitud_id}", desc: "Expediente de solicitud de derecho ARCO" },
-                            { method: "PATCH", path: "/api/v1/rgpd/solicitudes/{solicitud_id}", desc: "Resolución formal de solicitud RGPD" },
-                            { method: "GET", path: "/api/v1/rgpd/accesos-sensibles", desc: "Trazabilidad de accesos a datos de menores" }
-                        ]
-                    },
-                    {
-                        name: "🎓 21. Plan de Onboarding Docente",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/onboarding/pasos", desc: "Guía de bienvenida y primeros pasos para docentes" },
-                            { method: "PATCH", path: "/api/v1/onboarding/pasos/{paso_id}", desc: "Marcar hito de onboarding completado" },
-                            { method: "GET", path: "/api/v1/onboarding/videos", desc: "Píldoras en vídeo tutoriales por módulo" },
-                            { method: "POST", path: "/api/v1/onboarding/pasos", desc: "Creación de nuevo paso de bienvenida (admin)" },
-                            { method: "PUT", path: "/api/v1/onboarding/pasos/{paso_id}", desc: "Actualización de instrucciones de onboarding" },
-                            { method: "POST", path: "/api/v1/onboarding/videos", desc: "Publicación de nuevo vídeo explicativo" }
-                        ]
-                    },
-                    {
-                        name: "📆 22. Google Calendar Sync",
-                        endpoints: [
-                            { method: "POST", path: "/api/v1/calendario/sincronizar", desc: "Sincronización bidireccional con Google Calendar" },
-                            { method: "GET", path: "/api/v1/calendario/eventos", desc: "Listar eventos sincronizados en el centro" }
-                        ]
-                    }
-                ]
-            },
-            web: {
-                title: "Web Pública y Backoffice Administrativo",
-                stack: "PHP Puro (Sin Framework) · MySQL / MariaDB (3FN) · Cookie PHPSESSID",
-                groups: [
-                    {
-                        name: "🗂️ 1. Navegación y Árbol de Secciones",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/navegacion/menu", desc: "Estructura jerárquica recursiva con padre_id" },
-                            { method: "GET", path: "/api/v1/secciones", desc: "Listar páginas públicas activas ordenadas" },
-                            { method: "GET", path: "/api/v1/secciones/{seccion_id}", desc: "Detalle de página por identificador numérico" },
-                            { method: "GET", path: "/api/v1/secciones/{slug}", desc: "Acceso amigable SEO mediante slug" }
-                        ]
-                    },
-                    {
-                        name: "📰 2. Blog de Noticias y Comunicados",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/noticias", desc: "Feed público de noticias con paginación" },
-                            { method: "GET", path: "/api/v1/noticias/{slug}", desc: "Lectura completa de artículo por URL amigable" }
-                        ]
-                    },
-                    {
-                        name: "🏢 3. Departamentos y Programas (N:M)",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/departamentos", desc: "Fichas públicas de departamentos didácticos" },
-                            { method: "GET", path: "/api/v1/departamentos/{departamento_id}", desc: "Materias y profesorado del departamento" },
-                            { method: "GET", path: "/api/v1/departamentos/{departamento_id}/programas", desc: "Proyectos en los que participa el departamento" },
-                            { method: "GET", path: "/api/v1/programas", desc: "Catálogo de 20+ planes institucionales (Erasmus+, etc.)" },
-                            { method: "GET", path: "/api/v1/programas/{programa_id}", desc: "Ficha descriptiva y objetivos del programa" }
-                        ]
-                    },
-                    {
-                        name: "📚 4. Oferta Formativa de Enseñanzas",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/ensenanzas", desc: "Catálogo de ESO, Bachillerato y Familias de FP" },
-                            { method: "GET", path: "/api/v1/ensenanzas/{ensenanza_id}", desc: "Plan de estudios y perfil profesional del título" },
-                            { method: "GET", path: "/api/v1/ensenanzas/{ensenanza_id}/materias-optativas", desc: "Optativas correspondientes al ciclo o curso" }
-                        ]
-                    },
-                    {
-                        name: "👥 5. Personas y Órganos Colegiados",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/personas", desc: "Directorio de directiva, claustro y consejo escolar" },
-                            { method: "GET", path: "/api/v1/personas/{persona_id}", desc: "Ficha y cargo de la persona en el centro" }
-                        ]
-                    },
-                    {
-                        name: "📄 6. Repositorio Documental Público",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/documentos", desc: "Descarga de documentos para familias y normativas" },
-                            { method: "GET", path: "/api/v1/documentos/{documento_id}", desc: "Acceso al archivo digital categorizado" }
-                        ]
-                    },
-                    {
-                        name: "⚙️ 7. Datos del Centro y Contacto",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/configuracion", desc: "Parámetros institucionales: ubicación Lorca, teléfono, RRSS" },
-                            { method: "POST", path: "/api/v1/contacto/quejas-sugerencias", desc: "Envío telemático de sugerencias o quejas de familias" }
-                        ]
-                    },
-                    {
-                        name: "🏛️ 8. Trámites Telemáticos de Secretaría",
-                        endpoints: [
-                            { method: "POST", path: "/api/v1/secretaria/citas", desc: "Reserva de cita previa presencial en secretaría" },
-                            { method: "POST", path: "/api/v1/secretaria/tramites", desc: "Inicio telemático de matrícula o certificado" },
-                            { method: "GET", path: "/api/v1/secretaria/citas/{cita_id}/estado", desc: "Comprobación del estado de cita con localizador" },
-                            { method: "GET", path: "/api/v1/secretaria/tramites/{tramite_id}/estado", desc: "Seguimiento de tramitación de expediente" }
-                        ]
-                    },
-                    {
-                        name: "🗺️ 9. Sitemap XML (Indexación SEO)",
-                        endpoints: [
-                            { method: "GET", path: "/sitemap.xml", desc: "Mapa dinámico del sitio web para motores de búsqueda" }
-                        ]
-                    },
-                    {
-                        name: "🔐 10. Backoffice: Autenticación por Sesión",
-                        endpoints: [
-                            { method: "POST", path: "/api/v1/admin/auth/login", desc: "Inicio de sesión seguro con cookie PHPSESSID" },
-                            { method: "POST", path: "/api/v1/admin/auth/logout", desc: "Cierre de sesión y destrucción de sesión PHP" },
-                            { method: "GET", path: "/api/v1/admin/auth/me", desc: "Datos del administrador autenticado" }
-                        ]
-                    },
-                    {
-                        name: "📝 11. Backoffice: Gestión de Noticias",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/admin/noticias", desc: "Listar todas las noticias incluyendo borradores" },
-                            { method: "POST", path: "/api/v1/admin/noticias", desc: "Redactar y registrar nueva noticia" },
-                            { method: "GET", path: "/api/v1/admin/noticias/{noticia_id}", desc: "Carga de noticia en panel de edición" },
-                            { method: "PUT", path: "/api/v1/admin/noticias/{noticia_id}", desc: "Actualización completa del artículo y slug" },
-                            { method: "PATCH", path: "/api/v1/admin/noticias/{noticia_id}", desc: "Conmutar entre estado borrador y publicada" },
-                            { method: "DELETE", path: "/api/v1/admin/noticias/{noticia_id}", desc: "Eliminación de noticia" }
-                        ]
-                    },
-                    {
-                        name: "📄 12. Backoffice: Gestión de Documentos",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/admin/documentos", desc: "Catálogo completo de archivos del repositorio" },
-                            { method: "POST", path: "/api/v1/admin/documentos", desc: "Subida de nuevo documento normativo o circular" },
-                            { method: "PUT", path: "/api/v1/admin/documentos/{documento_id}", desc: "Modificación de título y categoría del archivo" },
-                            { method: "DELETE", path: "/api/v1/admin/documentos/{documento_id}", desc: "Eliminación física del archivo alojado" }
-                        ]
-                    },
-                    {
-                        name: "🗂️ 13. Backoffice: Estructura del Menú",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/admin/secciones", desc: "Árbol editorial completo incluyendo páginas ocultas" },
-                            { method: "POST", path: "/api/v1/admin/secciones", desc: "Creación de nueva página o sección institucional" },
-                            { method: "PUT", path: "/api/v1/admin/secciones/{seccion_id}", desc: "Modificación de ordenación y jerarquía de menú" },
-                            { method: "PATCH", path: "/api/v1/admin/secciones/{seccion_id}", desc: "Conmutar visibilidad pública de la página" },
-                            { method: "DELETE", path: "/api/v1/admin/secciones/{seccion_id}", desc: "Eliminación de página web" }
-                        ]
-                    },
-                    {
-                        name: "👤 14. Backoffice: Personas y Claustro",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/admin/personas", desc: "Directorio institucional editable completo" },
-                            { method: "POST", path: "/api/v1/admin/personas", desc: "Alta de miembro de equipo directivo o consejo" },
-                            { method: "PUT", path: "/api/v1/admin/personas/{persona_id}", desc: "Modificación de datos del miembro" },
-                            { method: "DELETE", path: "/api/v1/admin/personas/{persona_id}", desc: "Baja en el directorio público" }
-                        ]
-                    },
-                    {
-                        name: "🏢 15. Backoffice: Departamentos",
-                        endpoints: [
-                            { method: "POST", path: "/api/v1/admin/departamentos", desc: "Creación de departamento didáctico" },
-                            { method: "PUT", path: "/api/v1/admin/departamentos/{departamento_id}", desc: "Actualización de ficha y jefatura de depto" },
-                            { method: "DELETE", path: "/api/v1/admin/departamentos/{departamento_id}", desc: "Eliminación con control de integridad referencial" }
-                        ]
-                    },
-                    {
-                        name: "🎯 16. Backoffice: Programas e Integración N:M",
-                        endpoints: [
-                            { method: "POST", path: "/api/v1/admin/programas", desc: "Alta de nuevo proyecto de centro" },
-                            { method: "PUT", path: "/api/v1/admin/programas/{programa_id}", desc: "Actualización de descripción y objetivos" },
-                            { method: "DELETE", path: "/api/v1/admin/programas/{programa_id}", desc: "Baja de programa" },
-                            { method: "PUT", path: "/api/v1/admin/programas/{programa_id}/departamentos", desc: "Sincronización relacional de departamentos participantes (N:M)" }
-                        ]
-                    },
-                    {
-                        name: "📚 17. Backoffice: Enseñanzas y Optativas",
-                        endpoints: [
-                            { method: "POST", path: "/api/v1/admin/ensenanzas", desc: "Alta de nueva etapa o ciclo formativo" },
-                            { method: "PUT", path: "/api/v1/admin/ensenanzas/{ensenanza_id}", desc: "Modificación de perfil y plan de estudios" },
-                            { method: "DELETE", path: "/api/v1/admin/ensenanzas/{ensenanza_id}", desc: "Eliminación de enseñanza" },
-                            { method: "GET", path: "/api/v1/admin/ensenanzas/{ensenanza_id}/materias-optativas", desc: "Listado de optativas de la enseñanza" },
-                            { method: "POST", path: "/api/v1/admin/ensenanzas/{ensenanza_id}/materias-optativas", desc: "Creación de materia optativa" },
-                            { method: "PUT", path: "/api/v1/admin/ensenanzas/{ensenanza_id}/materias-optativas/{materia_id}", desc: "Edición de materia optativa" },
-                            { method: "DELETE", path: "/api/v1/admin/ensenanzas/{ensenanza_id}/materias-optativas/{materia_id}", desc: "Eliminación de materia optativa" }
-                        ]
-                    },
-                    {
-                        name: "🏛️ 18. Backoffice: Gestión de Secretaría",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/admin/secretaria/solicitudes", desc: "Bandeja de citas y trámites pendientes de atención" },
-                            { method: "GET", path: "/api/v1/admin/secretaria/solicitudes/{solicitud_id}", desc: "Expediente detallado con datos de contacto" },
-                            { method: "PATCH", path: "/api/v1/admin/secretaria/solicitudes/{solicitud_id}", desc: "Transición de estado: pendiente → en_curso → finalizado" }
-                        ]
-                    },
-                    {
-                        name: "⚙️ 19. Backoffice: Parámetros del Centro",
-                        endpoints: [
-                            { method: "GET", path: "/api/v1/admin/configuracion", desc: "Consulta de tabla clave-valor de configuración" },
-                            { method: "PUT", path: "/api/v1/admin/configuracion", desc: "Actualización de teléfonos, horarios y redes sociales" }
-                        ]
-                    }
-                ]
+        const SPEC_FILES = { intranet: 'openapi-intranet.yaml', web: 'openapi-web.yaml' };
+        const RAW_BASE = 'https://raw.githubusercontent.com/DAW2ProyectoIntermodular/ProyectoIntermodular/main/docs/api/';
+        const METODOS = ['get', 'post', 'put', 'patch', 'delete'];
+
+        // El catálogo se genera a partir de los contratos YAML: así nunca se desincroniza.
+        const apiData = {};
+
+        function getSpecUrl(proj) {
+            // Al abrir el archivo con doble clic (file://) el navegador bloquea la lectura
+            // de ficheros locales, así que en ese caso se usa la copia publicada en GitHub.
+            return location.protocol === 'file:' ? RAW_BASE + SPEC_FILES[proj] : './api/' + SPEC_FILES[proj];
+        }
+
+        async function cargarCatalogo(proj) {
+            if (apiData[proj]) return apiData[proj];
+            const resp = await fetch(getSpecUrl(proj));
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            const spec = jsyaml.load(await resp.text());
+
+            const grupos = new Map((spec.tags || []).map(t => [t.name, []]));
+            for (const [ruta, item] of Object.entries(spec.paths)) {
+                for (const m of METODOS) {
+                    const op = item[m];
+                    if (!op) continue;
+                    const tag = (op.tags && op.tags[0]) || 'Otros';
+                    if (!grupos.has(tag)) grupos.set(tag, []);
+                    grupos.get(tag).push({ method: m.toUpperCase(), path: ruta, desc: op.summary || '' });
+                }
             }
-        };
+            apiData[proj] = {
+                rutas: Object.keys(spec.paths).length,
+                groups: [...grupos]
+                    .filter(([, eps]) => eps.length > 0)
+                    .map(([name, endpoints], i) => ({ name: `${i + 1}. ${name}`, endpoints }))
+            };
+            return apiData[proj];
+        }
+
+        function esc(texto) {
+            return String(texto).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
 
         // ==========================================
         // CONTROL DE ESTADO
@@ -1151,11 +774,19 @@
         let currentView = 'catalog';
         let swaggerInstance = null;
 
-        function setProject(proj) {
+        async function setProject(proj) {
             currentProj = proj;
             document.getElementById('btn-proj-intranet').classList.toggle('active', proj === 'intranet');
             document.getElementById('btn-proj-web').classList.toggle('active', proj === 'web');
-            
+
+            try {
+                await cargarCatalogo(proj);
+            } catch (err) {
+                document.getElementById('endpoints-list').innerHTML =
+                    `<p style="padding: 2rem; text-align: center;">No se pudo cargar el contrato (${esc(err.message)}).</p>`;
+                return;
+            }
+            if (proj !== currentProj) return;
             renderStats();
             renderEndpoints();
             
@@ -1192,8 +823,12 @@
 
             const html = `
                 <div class="stat-chip">
+                    <span class="val">${data.rutas}</span>
+                    <span class="lbl">Rutas</span>
+                </div>
+                <div class="stat-chip">
                     <span class="val">${total}</span>
-                    <span class="lbl">Endpoints</span>
+                    <span class="lbl">Operaciones</span>
                 </div>
                 <div class="stat-chip">
                     <span class="val">${data.groups.length}</span>
@@ -1237,13 +872,13 @@
                 if (filtered.length === 0) return;
 
                 const itemsHtml = filtered.map(e => {
-                    const formattedPath = e.path.replace(/\{([^}]+)\}/g, '<span class="path-param">{$1}</span>');
+                    const formattedPath = esc(e.path).replace(/\{([^}]+)\}/g, '<span class="path-param">{$1}</span>');
                     return `
                         <div class="endpoint-item">
                             <span class="method-tag ${e.method}">${e.method}</span>
                             <span class="endpoint-route">${formattedPath}</span>
                             <div class="endpoint-meta">
-                                <span class="endpoint-desc">${e.desc}</span>
+                                <span class="endpoint-desc">${esc(e.desc)}</span>
                                 <button class="copy-btn" onclick="copyRoute('${e.path}', this)" title="Copiar ruta">
                                     📋 Copiar
                                 </button>
@@ -1256,8 +891,8 @@
                     <div class="module-group" id="grp-${gIdx}">
                         <div class="module-header" onclick="toggleGroup(${gIdx})">
                             <div class="module-title">
-                                <h3>${g.name}</h3>
-                                <span class="module-count">${filtered.length} endpoints</span>
+                                <h3>${esc(g.name)}</h3>
+                                <span class="module-count">${filtered.length} operaciones</span>
                             </div>
                             <span class="module-toggle-icon">▼</span>
                         </div>
@@ -1271,8 +906,8 @@
             if (!html) {
                 html = `
                     <div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted); background: var(--bg-surface); border: 1px dashed var(--border); border-radius: var(--radius-md);">
-                        <p style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.3rem;">No se encontraron endpoints</p>
-                        <p style="font-size: 0.85rem;">Ningún endpoint coincide con tu búsqueda "${query}".</p>
+                        <p style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.3rem;">No se encontraron operaciones</p>
+                        <p style="font-size: 0.85rem;">Ninguna operación coincide con tu búsqueda "${esc(query)}".</p>
                     </div>
                 `;
             }
@@ -1301,11 +936,6 @@
             });
         }
 
-        function getSpecUrl(proj) {
-            return proj === 'intranet'
-                ? 'https://raw.githubusercontent.com/DAW2ProyectoIntermodular/ProyectoIntermodular/main/docs/api/openapi-intranet.yaml'
-                : 'https://raw.githubusercontent.com/DAW2ProyectoIntermodular/ProyectoIntermodular/main/docs/api/openapi-web.yaml';
-        }
 
         function loadSwagger(proj) {
             const container = document.getElementById('swagger-ui-container');
@@ -1328,7 +958,7 @@
 
             if (!window.Redoc) {
                 const s = document.createElement('script');
-                s.src = 'https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js';
+                s.src = 'https://cdn.jsdelivr.net/npm/redoc@2.5.4/bundles/redoc.standalone.js';
                 s.onload = () => initRedoc(proj);
                 document.body.appendChild(s);
             } else {

@@ -281,7 +281,7 @@
 </div>
 
 <!-- ============================================================== -->
-<!-- PÁGINA 1: INTRANET DE GESTIÓN DOCENTE (76 ENDPOINTS)           -->
+<!-- PÁGINA 1: INTRANET DE GESTIÓN DOCENTE                         -->
 <!-- ============================================================== -->
 <div class="page">
     <div class="page-header">
@@ -292,18 +292,18 @@
         <div class="meta">
             FastAPI · MongoDB · Redis · JWT Bearer + Google OAuth2<br>
             Roles: <code>profesor</code> · <code>administrador</code> · <code>jefatura_estudios</code> · <code>secretaria</code> · <code>responsable_rmi</code> · <code>admin_rrss</code> · <code>direccion</code><br>
-            <strong>76 endpoints · 22 módulos operativos</strong>
+            <strong>76 rutas · 134 operaciones · 23 módulos</strong>
         </div>
     </div>
 
     <div class="stats">
-        <div class="stat"><div class="stat-number">76</div><div class="stat-label">Total Endpoints</div></div>
-        <div class="stat"><div class="stat-number">22</div><div class="stat-label">Módulos</div></div>
-        <div class="stat"><div class="stat-number">30</div><div class="stat-label">GET (Consultas)</div></div>
-        <div class="stat"><div class="stat-number">24</div><div class="stat-label">POST (Creación/Acción)</div></div>
-        <div class="stat"><div class="stat-number">11</div><div class="stat-label">PUT (Sustitución)</div></div>
-        <div class="stat"><div class="stat-number">13</div><div class="stat-label">PATCH (Estados)</div></div>
-        <div class="stat"><div class="stat-number">10</div><div class="stat-label">DELETE (Borrado)</div></div>
+        <div class="stat"><div class="stat-number">76</div><div class="stat-label">Rutas</div></div>
+        <div class="stat"><div class="stat-number">134</div><div class="stat-label">Operaciones</div></div>
+        <div class="stat"><div class="stat-number">60</div><div class="stat-label">GET (Consultas)</div></div>
+        <div class="stat"><div class="stat-number">33</div><div class="stat-label">POST (Creación/Acción)</div></div>
+        <div class="stat"><div class="stat-number">18</div><div class="stat-label">PUT (Sustitución)</div></div>
+        <div class="stat"><div class="stat-number">12</div><div class="stat-label">PATCH (Estados)</div></div>
+        <div class="stat"><div class="stat-number">11</div><div class="stat-label">DELETE (Borrado)</div></div>
     </div>
 
     <div class="conventions">
@@ -582,7 +582,7 @@
 </div>
 
 <!-- ============================================================== -->
-<!-- PÁGINA 2: WEB PÚBLICA + BACKOFFICE (48 ENDPOINTS)              -->
+<!-- PÁGINA 2: WEB PÚBLICA + BACKOFFICE -->
 <!-- ============================================================== -->
 <div class="page">
     <div class="page-header">
@@ -593,19 +593,19 @@
         <div class="meta">
             PHP Puro (Sin Framework) · MySQL/MariaDB (3FN) · HTML5/TS<br>
             Público: Sin Autenticación · Backoffice: Sesión con Cookie <code>PHPSESSID</code><br>
-            <strong>48 endpoints · 22 módulos (22 Públicos + 26 Backoffice)</strong>
+            <strong>47 rutas · 75 operaciones · 22 módulos (24 públicas + 51 backoffice)</strong>
         </div>
     </div>
 
     <div class="stats">
-        <div class="stat"><div class="stat-number">48</div><div class="stat-label">Total Endpoints</div></div>
-        <div class="stat"><div class="stat-number">22</div><div class="stat-label">Endpoints Públicos</div></div>
-        <div class="stat"><div class="stat-number">26</div><div class="stat-label">Endpoints Backoffice</div></div>
-        <div class="stat"><div class="stat-number">26</div><div class="stat-label">GET</div></div>
-        <div class="stat"><div class="stat-number">10</div><div class="stat-label">POST</div></div>
-        <div class="stat"><div class="stat-number">6</div><div class="stat-label">PUT</div></div>
-        <div class="stat"><div class="stat-number">4</div><div class="stat-label">PATCH</div></div>
-        <div class="stat"><div class="stat-number">6</div><div class="stat-label">DELETE</div></div>
+        <div class="stat"><div class="stat-number">75</div><div class="stat-label">Operaciones</div></div>
+        <div class="stat"><div class="stat-number">24</div><div class="stat-label">Públicas</div></div>
+        <div class="stat"><div class="stat-number">51</div><div class="stat-label">Backoffice</div></div>
+        <div class="stat"><div class="stat-number">41</div><div class="stat-label">GET</div></div>
+        <div class="stat"><div class="stat-number">13</div><div class="stat-label">POST</div></div>
+        <div class="stat"><div class="stat-number">10</div><div class="stat-label">PUT</div></div>
+        <div class="stat"><div class="stat-number">3</div><div class="stat-label">PATCH</div></div>
+        <div class="stat"><div class="stat-number">8</div><div class="stat-label">DELETE</div></div>
     </div>
 
     <div class="conventions">
@@ -626,10 +626,9 @@
     <div class="grid grid-3">
         <!-- P1. Navegación -->
         <div class="section">
-            <div class="section-header">🗂️ 1. Navegación Jerárquica <span class="count">4</span></div>
+            <div class="section-header">🗂️ 1. Navegación Jerárquica <span class="count">3</span></div>
             <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/navegacion/menu</span><span class="desc">Árbol con padre_id</span></div>
             <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/secciones</span><span class="desc">Páginas activas</span></div>
-            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/secciones/<span class="param">{seccion_id}</span></span></div>
             <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/secciones/<span class="param">{slug}</span></span><span class="desc">URL amigable</span></div>
         </div>
 
@@ -708,7 +707,7 @@
 
         <!-- B2. Admin Noticias -->
         <div class="section">
-            <div class="section-header">📝 11. Admin: Noticias (Borradores) <span class="count">5</span></div>
+            <div class="section-header">📝 11. Admin: Noticias (Borradores) <span class="count">6</span></div>
             <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/noticias</span><span class="desc">Incluye borradores</span></div>
             <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/admin/noticias</span><span class="desc">Redactar noticia</span></div>
             <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/noticias/<span class="param">{noticia_id}</span></span></div>
@@ -719,18 +718,20 @@
 
         <!-- B3. Admin Documentos -->
         <div class="section">
-            <div class="section-header">📄 12. Admin: Documentos <span class="count">4</span></div>
+            <div class="section-header">📄 12. Admin: Documentos <span class="count">5</span></div>
             <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/documentos</span><span class="desc">Gestión archivos</span></div>
             <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/admin/documentos</span><span class="desc">Subir archivo</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/documentos/<span class="param">{documento_id}</span></span></div>
             <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/admin/documentos/<span class="param">{documento_id}</span></span></div>
             <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/admin/documentos/<span class="param">{documento_id}</span></span></div>
         </div>
 
         <!-- B4. Admin Secciones -->
         <div class="section">
-            <div class="section-header">🗂️ 13. Admin: Estructura del Menú <span class="count">5</span></div>
+            <div class="section-header">🗂️ 13. Admin: Estructura del Menú <span class="count">6</span></div>
             <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/secciones</span><span class="desc">Árbol completo</span></div>
             <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/admin/secciones</span><span class="desc">Nueva sección</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/secciones/<span class="param">{seccion_id}</span></span></div>
             <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/admin/secciones/<span class="param">{seccion_id}</span></span></div>
             <div class="endpoint"><span class="method PATCH">PATCH</span><span class="path">/api/v1/admin/secciones/<span class="param">{seccion_id}</span></span><span class="desc">Mostrar/Ocultar</span></div>
             <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/admin/secciones/<span class="param">{seccion_id}</span></span></div>
@@ -738,25 +739,30 @@
 
         <!-- B5. Admin Personas -->
         <div class="section">
-            <div class="section-header">👤 14. Admin: Claustro y Directiva <span class="count">4</span></div>
+            <div class="section-header">👤 14. Admin: Claustro y Directiva <span class="count">5</span></div>
             <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/personas</span><span class="desc">Listar todo</span></div>
             <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/admin/personas</span><span class="desc">Alta miembro</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/personas/<span class="param">{persona_id}</span></span></div>
             <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/admin/personas/<span class="param">{persona_id}</span></span></div>
             <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/admin/personas/<span class="param">{persona_id}</span></span></div>
         </div>
 
         <!-- B6. Admin Departamentos -->
         <div class="section">
-            <div class="section-header">🏢 15. Admin: Departamentos <span class="count">3</span></div>
+            <div class="section-header">🏢 15. Admin: Departamentos <span class="count">5</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/departamentos</span></div>
             <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/admin/departamentos</span><span class="desc">Crear depto</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/departamentos/<span class="param">{departamento_id}</span></span></div>
             <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/admin/departamentos/<span class="param">{departamento_id}</span></span></div>
             <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/admin/departamentos/<span class="param">{departamento_id}</span></span></div>
         </div>
 
         <!-- B7. Admin Programas -->
         <div class="section">
-            <div class="section-header">🎯 16. Admin: Programas (N:M) <span class="count">4</span></div>
+            <div class="section-header">🎯 16. Admin: Programas (N:M) <span class="count">6</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/programas</span></div>
             <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/admin/programas</span><span class="desc">Nuevo programa</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/programas/<span class="param">{programa_id}</span></span></div>
             <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/admin/programas/<span class="param">{programa_id}</span></span></div>
             <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/admin/programas/<span class="param">{programa_id}</span></span></div>
             <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/admin/programas/<span class="param">{programa_id}</span>/departamentos</span><span class="desc">Sync N:M</span></div>
@@ -764,12 +770,15 @@
 
         <!-- B8. Admin Enseñanzas y Optativas -->
         <div class="section">
-            <div class="section-header">📚 17. Admin: Enseñanzas y Optativas <span class="count">7</span></div>
+            <div class="section-header">📚 17. Admin: Enseñanzas y Optativas <span class="count">10</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/ensenanzas</span></div>
             <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/admin/ensenanzas</span><span class="desc">Nueva etapa</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/ensenanzas/<span class="param">{ensenanza_id}</span></span></div>
             <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/admin/ensenanzas/<span class="param">{ensenanza_id}</span></span></div>
             <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/admin/ensenanzas/<span class="param">{ensenanza_id}</span></span></div>
             <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/ensenanzas/<span class="param">{ensenanza_id}</span>/materias-optativas</span></div>
             <div class="endpoint"><span class="method POST">POST</span><span class="path">/api/v1/admin/ensenanzas/<span class="param">{ensenanza_id}</span>/materias-optativas</span></div>
+            <div class="endpoint"><span class="method GET">GET</span><span class="path">/api/v1/admin/ensenanzas/<span class="param">{ensenanza_id}</span>/materias-optativas/<span class="param">{materia_id}</span></span></div>
             <div class="endpoint"><span class="method PUT">PUT</span><span class="path">/api/v1/admin/ensenanzas/<span class="param">{ensenanza_id}</span>/materias-optativas/<span class="param">{materia_id}</span></span></div>
             <div class="endpoint"><span class="method DELETE">DELETE</span><span class="path">/api/v1/admin/ensenanzas/<span class="param">{ensenanza_id}</span>/materias-optativas/<span class="param">{materia_id}</span></span></div>
         </div>
