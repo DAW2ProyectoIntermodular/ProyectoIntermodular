@@ -2932,11 +2932,16 @@ paths:
       tags:
       - Tickets
       summary: Listar tickets de solicitud operativa
-      description: 'Consulta la cola de peticiones y solicitudes operativas. Filtra
-        por tipo de flujo
+      description: 'Devuelve los tickets que el usuario puede ver: **los suyos y los
+        que tiene a su cargo**.
 
-        (`rmi`: incidencias informáticas; `compras`: presupuestos/adquisiciones; `rrss`:
-        publicaciones).
+
+        Cada tipo tiene un rol responsable: `rmi` → `responsable_rmi`, `compras` →
+        `secretaria`, `rrss` → `admin_rrss`. El responsable ve todos los tickets de
+        su tipo y el administrador ve todos.
+
+
+        Se ordenan del más reciente al más antiguo.
 
         '
       operationId: listarTickets
@@ -2992,15 +2997,13 @@ paths:
       tags:
       - Tickets
       summary: Crear ticket operativo unificado
-      description: 'Crea una nueva solicitud según su tipo:
+      description: 'Crea una solicitud. Cualquier usuario autenticado puede crearla;
+        nace en estado `pendiente`.
 
-        - `rmi`: Requiere aula, dispositivo y descripción técnica (notifica por email
-        al responsable RMI).
 
-        - `compras`: Requiere artículos, desglose presupuestario y justificación (notifica
-        al secretario).
+        - `rmi`: incidencia informática. `datos_especificos` requiere `aula` y `dispositivos`.
 
-        - `rrss`: Difusión en redes sociales (notifica al gestor de RRSS).
+        - `compras` y `rrss`: todavía no disponibles (se responde `422`).
 
         '
       operationId: crearTicket
@@ -3055,8 +3058,8 @@ paths:
       tags:
       - Tickets
       summary: Obtener detalle completo de un ticket
-      description: Recupera los datos genéricos y específicos (`datos_especificos`),
-        historial y adjuntos del ticket.
+      description: Recupera el ticket. Solo lo ven su solicitante, el responsable
+        de ese tipo y el administrador; para el resto se responde `404`.
       operationId: obtenerTicketPorId
       security:
       - bearerAuth: []
@@ -3086,7 +3089,8 @@ paths:
       tags:
       - Tickets
       summary: Actualizar ticket completo
-      description: Modifica íntegramente la información de la solicitud.
+      description: Modifica el contenido de la solicitud. Solo el solicitante mientras
+        el ticket está `pendiente`, o un administrador. El tipo no se puede cambiar.
       operationId: actualizarTicketCompleto
       security:
       - bearerAuth: []
@@ -3118,14 +3122,26 @@ paths:
           $ref: '#/components/responses/Respuesta403'
         '404':
           $ref: '#/components/responses/Respuesta404'
+        '409':
+          description: El ticket ya no está pendiente y su solicitante no puede modificarlo.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetalle'
         '422':
           $ref: '#/components/responses/Respuesta422'
     patch:
       tags:
       - Tickets
       summary: Cambiar estado o asignar responsable del ticket
-      description: Permite transicionar el estado del ticket (`pendiente` -> `en_curso`
-        -> `finalizado`) o reasignarlo.
+      description: 'Avanza el estado del ticket (`pendiente` → `en_curso` → `finalizado`)
+        o cambia el responsable asignado. Solo el responsable de ese tipo de ticket
+        o un administrador.
+
+
+        Para reasignar sin cambiar de estado se envía el estado actual.
+
+        '
       operationId: transicionarEstadoTicket
       security:
       - bearerAuth: []
@@ -3169,8 +3185,8 @@ paths:
       tags:
       - Tickets
       summary: Eliminar ticket
-      description: Elimina una solicitud del sistema. Solo solicitante en estado pendiente
-        o administrador.
+      description: Elimina una solicitud. Solo su solicitante mientras está `pendiente`,
+        o un administrador.
       operationId: eliminarTicket
       security:
       - bearerAuth: []
@@ -7661,18 +7677,27 @@ components:
             funcionamiento.
         datos_especificos:
           type: object
-          description: Estructura flexible según tipo (p.ej. aula/dispositivo en RMI;
-            artículos/precio en Compras; texto/medios en RRSS).
+          description: 'Datos propios de cada tipo. `rmi`: `aula` (texto) y `dispositivos`
+            (lista con al menos un elemento); admite campos adicionales. `compras`
+            y `rrss` se definirán al desarrollar esos módulos.'
           examples:
-          - aula: Aula TIC 2
-            dispositivo: Proyector Epson EB-535W
-            ip_dispositivo: 192.168.10.45
+          - &id001
+            aula: Aula TIC 2
+            dispositivos:
+            - Proyector Epson EB-535W
+        comentario_resolucion:
+          type:
+          - string
+          - 'null'
+          description: Comentario del responsable al gestionar el ticket.
+          examples:
+          - Sustituida la lámpara del proyector por repuesto de almacén.
         adjuntos_urls:
           type: array
           items:
             type: string
           examples:
-          - - https://intranet.iesramonarcas.es/media/tickets/foto_averia.jpg
+          - []
         fecha_creacion:
           type: string
           format: date-time
@@ -7704,7 +7729,7 @@ components:
           - compras
           - rrss
           examples:
-          - compras
+          - rmi
         prioridad:
           type: string
           enum:
@@ -7718,21 +7743,19 @@ components:
         titulo:
           type: string
           examples:
-          - Adquisición de 5 switches Gigabit para taller de redes
+          - Fallo proyector aula TIC 2
         descripcion:
           type: string
           examples:
-          - Switches gestionables de 24 puertos para prácticas del módulo de Redes
-            Locales en SMR.
+          - La lámpara del proyector parpadea en rojo y se apaga tras 5 minutos de
+            funcionamiento.
         datos_especificos:
           type: object
           examples:
-          - articulos:
-            - nombre: Switch D-Link DGS-1210-24
-              cantidad: 5
-              precio_unitario_estimado: 120.5
-            total_presupuesto: 602.5
-            departamento: Informática
+          - *id001
+          description: 'Datos propios de cada tipo. `rmi`: `aula` (texto) y `dispositivos`
+            (lista con al menos un elemento); admite campos adicionales. `compras`
+            y `rrss` se definirán al desarrollar esos módulos.'
       required:
       - tipo
       - titulo
@@ -7755,6 +7778,9 @@ components:
           - 'null'
           examples:
           - 660e1d8f1b2c3d4e5f6a7b8d
+          description: Usuario que se hace cargo. Debe tener el rol responsable de
+            ese tipo de ticket. Si no se indica al pasar a `en_curso`, se asigna quien
+            hace el cambio.
         comentario_resolucion:
           type:
           - string
