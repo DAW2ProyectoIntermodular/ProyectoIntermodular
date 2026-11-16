@@ -20,28 +20,24 @@ El único punto de unión entre ambos es el enlace «Acceso intranet» de la web
 | Fase | Contenido | Estado |
 |---|---|---|
 | Diseño de las APIs | Contratos OpenAPI 3.1 de ambos productos, portal de documentación y hoja resumen | ✅ Terminado |
-| Cimientos | Entorno con Docker, modelo de datos, autenticación y roles básicos | ✅ Terminado |
-| Núcleo funcional | Tablón, FEM, RRSS con IA, retrasos, aulas, tickets RMI/compras… | 🔄 Siguiente |
+| Cimientos (intranet) | Entorno con Docker, modelo de datos, autenticación y roles básicos | ✅ Terminado |
+| Núcleo funcional | Tablón, FEM, RRSS con IA, retrasos, aulas, tickets RMI/compras… | 🔄 En desarrollo |
 | Guardias y firma | Guardias por rondas, ausencias con firma, aula de convivencia, comisiones | ⏳ Pendiente |
 | Integraciones | OAuth completo, Google Calendar, notificaciones push y email | ⏳ Pendiente |
 
 ---
 
-## 🚀 Puesta en marcha
+## 🗂️ Repositorios del proyecto
 
-Hace falta tener [Docker](https://www.docker.com/) instalado.
+El proyecto está repartido en tres repositorios de la misma organización:
 
-```bash
-git clone https://github.com/DAW2ProyectoIntermodular/ProyectoIntermodular.git
-cd ProyectoIntermodular
-cp .env.example .env
-docker compose up --build
-```
+| Repositorio | Contenido |
+|---|---|
+| **ProyectoIntermodular** (este) | Diseño de las APIs: contratos OpenAPI, portal de documentación y hoja resumen |
+| [Intranet-Proyecto](https://github.com/DAW2ProyectoIntermodular/Intranet-Proyecto) | Código de la intranet (backend FastAPI y frontend React) |
+| [Web-publica-proyecto](https://github.com/DAW2ProyectoIntermodular/Web-publica-proyecto) | Código de la web pública (PHP y MySQL) |
 
-- API de la intranet: <http://localhost:8000>
-- Documentación interactiva de la API: <http://localhost:8000/docs>
-
-Los detalles (primer administrador, inicio de sesión, tests) están en [`intranet/backend/README.md`](./intranet/backend/README.md), y el esquema de datos en [`docs/modelo-datos.md`](./docs/modelo-datos.md).
+Las instrucciones para instalar y ejecutar cada aplicación están en el README de su repositorio.
 
 ---
 
@@ -97,7 +93,7 @@ Convenciones aplicadas:
 - `201 Created` con cabecera `Location`, `204 No Content` al borrar, `409 Conflict` en solapes o transiciones de estado no válidas.
 - Errores siempre con el formato `{"detail": "..."}`.
 
-Los dos contratos se validan automáticamente en cada cambio con **openapi-spec-validator** y **Redocly CLI** (workflow `lint-openapi.yml`), y el backend con **pytest** (workflow `tests-backend.yml`).
+Los dos contratos se validan automáticamente en cada cambio con **openapi-spec-validator** y **Redocly CLI** (workflow `lint-openapi.yml`).
 
 ### Documentación publicada
 
@@ -119,53 +115,18 @@ Y abrir <http://localhost:8000> en el navegador. (Si se abre `index.html` con do
 ## 📁 Estructura del repositorio
 
 ```text
-├── intranet/
-│   ├── backend/              # API FastAPI
-│   │   ├── app/
-│   │   │   ├── api/v1/       # Endpoints versionados
-│   │   │   ├── core/         # Configuración, seguridad y permisos
-│   │   │   ├── models/       # Modelos de MongoDB
-│   │   │   ├── schemas/      # Esquemas Pydantic
-│   │   │   ├── services/     # Lógica de negocio (guardias, ausencias…)
-│   │   │   └── utils/        # PDF y firmas
-│   │   └── tests/            # Pruebas con pytest
-│   └── frontend/             # PWA React + TypeScript
-├── web-publica/
-│   ├── backend/              # PHP sin framework
-│   │   ├── api/v1/           # Endpoints públicos
-│   │   ├── admin/            # Backoffice
-│   │   ├── config/           # Conexión PDO
-│   │   └── models/           # Acceso a datos
-│   ├── frontend/             # HTML, CSS y TypeScript
-│   └── database/             # Scripts SQL
 ├── docs/
-│   ├── api/                  # Contratos OpenAPI 3.1
-│   ├── modelo-datos.md       # Esquema de datos de la intranet
-│   ├── index.html            # Portal de documentación
-│   └── cheatsheet.html       # Hoja resumen A3
+│   ├── api/
+│   │   ├── openapi-intranet.yaml   # Contrato de la intranet
+│   │   └── openapi-web.yaml        # Contrato de la web pública y su backoffice
+│   ├── index.html                  # Portal de documentación
+│   └── cheatsheet.html             # Hoja resumen A3
 ├── .github/workflows/
-│   ├── deploy-docs.yml       # Publica docs/ en GitHub Pages
-│   ├── lint-openapi.yml      # Valida los contratos OpenAPI
-│   └── tests-backend.yml     # Ejecuta los tests del backend
-├── docker-compose.yml        # Entorno de desarrollo (MongoDB, Redis y API)
-├── .env.example              # Plantilla de variables de entorno
-├── redocly.yaml              # Reglas del linter de OpenAPI
+│   ├── deploy-docs.yml             # Publica docs/ en GitHub Pages
+│   └── lint-openapi.yml            # Valida los contratos OpenAPI
+├── redocly.yaml                    # Reglas del linter de OpenAPI
 └── LICENSE
 ```
-
-El backend de la intranet ya tiene la autenticación, los roles, los usuarios y los departamentos. El resto de carpetas se irán completando en las siguientes fases.
-
----
-
-## 🔐 Variables de entorno
-
-Las credenciales nunca se suben al repositorio. Para trabajar en local:
-
-```bash
-cp .env.example .env
-```
-
-y rellenar los valores en el `.env` (que está excluido en `.gitignore`).
 
 ---
 
