@@ -1,0 +1,36 @@
+name: Tests del backend (CI)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'intranet/backend/**'
+      - '.github/workflows/tests-backend.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'intranet/backend/**'
+
+jobs:
+  pytest:
+    name: pytest (intranet)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: intranet/backend
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: intranet/backend/requirements-dev.txt
+
+      - name: Instalar dependencias
+        run: pip install -r requirements-dev.txt
+
+      - name: Ejecutar tests
+        run: pytest
