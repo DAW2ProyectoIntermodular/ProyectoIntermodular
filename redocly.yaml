@@ -1,0 +1,9 @@
+# Configuración del linter de contratos OpenAPI (Redocly CLI)
+extends:
+  - recommended
+
+rules:
+  # Los servidores localhost son los entornos de desarrollo, se declaran a propósito.
+  no-server-example.com: off
+  # Hay GET sin parámetros (menú, configuración, sitemap) que no pueden devolver un 4XX.
+  operation-4xx-response: off

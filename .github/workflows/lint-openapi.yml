@@ -5,15 +5,17 @@ on:
     branches: [main]
     paths:
       - 'docs/api/**'
+      - 'redocly.yaml'
       - '.github/workflows/lint-openapi.yml'
   pull_request:
     branches: [main]
     paths:
       - 'docs/api/**'
+      - 'redocly.yaml'
 
 jobs:
   validate-specs:
-    name: Validar Contratos OpenAPI 3.1
+    name: Validar contratos OpenAPI 3.1
     runs-on: ubuntu-latest
     steps:
       - name: Checkout del repositorio
@@ -29,24 +31,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyyaml openapi-spec-validator
 
-      - name: Validar openapi-intranet.yaml
+      - name: Validar estructura (openapi-spec-validator)
         run: |
-          python -c "
+          python - <<'EOF'
           import yaml
           from openapi_spec_validator import validate
-          with open('docs/api/openapi-intranet.yaml', 'r', encoding='utf-8') as f:
-              spec = yaml.safe_load(f)
-          validate(spec)
-          print('✅ openapi-intranet.yaml: Válido al 100%')
-          "
+          for ruta in ("docs/api/openapi-intranet.yaml", "docs/api/openapi-web.yaml"):
+              with open(ruta, encoding="utf-8") as f:
+                  validate(yaml.safe_load(f))
+              print(f"OK {ruta}")
+          EOF
 
-      - name: Validar openapi-web.yaml
-        run: |
-          python -c "
-          import yaml
-          from openapi_spec_validator import validate
-          with open('docs/api/openapi-web.yaml', 'r', encoding='utf-8') as f:
-              spec = yaml.safe_load(f)
-          validate(spec)
-          print('✅ openapi-web.yaml: Válido al 100%')
-          "
+      - name: Lint de buenas prácticas (Redocly)
+        run: npx --yes @redocly/cli@2.79.0 lint docs/api/openapi-intranet.yaml docs/api/openapi-web.yaml

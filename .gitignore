@@ -2,14 +2,14 @@
 # Proyecto Intermodular — IES Ramón Arcas Meca (Lorca)
 # ===========================
 
-# ---- Carpeta local (contextos, notas, scripts internos del equipo) ----
+# ---- Archivos locales de cada desarrollador ----
 .local/
 
 # ---- Entornos virtuales y variables de entorno sensibles ----
 .env
 .env.*
-.env*
 *.env
+!.env.example
 venv/
 __pycache__/
 *.py[cod]
