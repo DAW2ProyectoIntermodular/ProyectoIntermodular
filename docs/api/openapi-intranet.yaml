@@ -722,11 +722,17 @@ paths:
       tags:
       - Tablón de Anuncios
       summary: Listar anuncios del tablón
-      description: 'Feed de anuncios segmentado por ámbito (general, departamental
-        o curso), departamento y estado destacado.
+      description: 'Feed de anuncios vigentes, con los destacados primero y después
+        del más reciente al más antiguo.
 
-        Aplica borrado lógico para anuncios caducados a menos que se especifique `incluir_caducados=true`
-        con permisos directivos.
+
+        Cada docente ve los anuncios generales, los dirigidos a cursos y los de su
+        propio departamento. Dirección, jefatura de estudios y administración ven
+        todos.
+
+
+        Los anuncios caducados o retirados no se muestran, salvo con `incluir_caducados=true`
+        (solo dirección, jefatura de estudios y administración).
 
         '
       operationId: listarAnuncios
@@ -788,16 +794,27 @@ paths:
                 $ref: '#/components/schemas/PaginaAnuncios'
         '401':
           $ref: '#/components/responses/Respuesta401'
+        '403':
+          description: '`incluir_caducados=true` solicitado sin rol de dirección,
+            jefatura de estudios o administración.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetalle'
         '422':
           $ref: '#/components/responses/Respuesta422'
     post:
       tags:
       - Tablón de Anuncios
       summary: Publicar nuevo anuncio
-      description: 'Crea una nueva comunicación en el tablón. Puede enviarse notificación
-        push a los docentes suscritos
+      description: 'Crea una nueva comunicación en el tablón.
 
-        si se marca como destacado. Devuelve `201 Created` y la cabecera `Location`.
+
+        Pueden publicar dirección, jefatura de estudios y administración. El jefe
+        de un departamento puede publicar anuncios departamentales de su departamento.
+
+
+        Devuelve `201 Created` y la cabecera `Location`.
 
         '
       operationId: crearAnuncio
@@ -830,7 +847,8 @@ paths:
       tags:
       - Tablón de Anuncios
       summary: Obtener detalle de un anuncio
-      description: Recupera el contenido completo de un anuncio.
+      description: Recupera el contenido completo de un anuncio. Si el anuncio es
+        de un departamento ajeno se responde `404`.
       operationId: obtenerAnuncioPorId
       security:
       - bearerAuth: []
@@ -899,8 +917,9 @@ paths:
       tags:
       - Tablón de Anuncios
       summary: Fijar destacado o actualizar caducidad de anuncio
-      description: Permite fijar/desfijar como destacado o modificar la vigencia del
-        anuncio sin tocar su contenido.
+      description: 'Permite fijar/desfijar como destacado, cambiar la caducidad o
+        retirar el anuncio (`activo: false`) sin tocar su contenido. Solo autor o
+        administrador.'
       operationId: modificarEstadoAnuncio
       security:
       - bearerAuth: []
@@ -5819,11 +5838,20 @@ components:
           - 'null'
           examples:
           - null
+        curso:
+          type:
+          - string
+          - 'null'
+          description: Curso o grupo destinatario. Obligatorio cuando el ámbito es
+            `curso`.
+          examples:
+          - 2º DAW
         ambito:
           type: string
           enum:
           - general
           - departamental
+          - curso
           examples:
           - general
         destacado:
@@ -5844,7 +5872,8 @@ components:
           - '2026-10-21T23:59:59Z'
         activo:
           type: boolean
-          description: Indica si el anuncio está vigente (borrado lógico de caducados).
+          description: '`true` si el anuncio está vigente: no se ha retirado y no
+            ha caducado.'
           examples:
           - true
       required:
@@ -5874,11 +5903,22 @@ components:
           - 'null'
           examples:
           - 660e1d8f1b2c3d4e5f6a7b8c
+          description: Departamento destinatario. Obligatorio cuando el ámbito es
+            `departamental`.
+        curso:
+          type:
+          - string
+          - 'null'
+          description: Curso o grupo destinatario. Obligatorio cuando el ámbito es
+            `curso`.
+          examples:
+          - 2º DAW
         ambito:
           type: string
           enum:
           - general
           - departamental
+          - curso
           default: general
           examples:
           - general
