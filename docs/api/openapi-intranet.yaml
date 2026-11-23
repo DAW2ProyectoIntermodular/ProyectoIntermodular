@@ -1173,6 +1173,10 @@ paths:
           $ref: '#/components/responses/Respuesta401'
         '422':
           $ref: '#/components/responses/Respuesta422'
+        '429':
+          $ref: '#/components/responses/Respuesta429'
+        '503':
+          $ref: '#/components/responses/Respuesta503'
   /api/v1/publicaciones-rrss:
     get:
       tags:
@@ -4161,6 +4165,8 @@ paths:
                 $ref: '#/components/schemas/ErrorDetalle'
         '422':
           $ref: '#/components/responses/Respuesta422'
+        '503':
+          $ref: '#/components/responses/Respuesta503'
   /api/v1/fem/empresas/{empresa_id}:
     get:
       tags:
@@ -4230,6 +4236,8 @@ paths:
           $ref: '#/components/responses/Respuesta404'
         '422':
           $ref: '#/components/responses/Respuesta422'
+        '503':
+          $ref: '#/components/responses/Respuesta503'
     patch:
       tags:
       - FEM (Formación en Empresas)
@@ -4741,9 +4749,9 @@ paths:
     get:
       tags:
       - RGPD
-      summary: Listar solicitudes de derechos ARCO (Administrador)
+      summary: Listar solicitudes de derechos ARCO
       description: Consulta las peticiones formales de acceso, rectificación, supresión
-        o limitación de datos.
+        o limitación de datos. Administración ve todas; el resto del personal, solo las suyas.
       operationId: listarSolicitudesRGPD
       security:
       - bearerAuth: []
@@ -4759,8 +4767,6 @@ paths:
                 $ref: '#/components/schemas/PaginaSolicitudesRGPD'
         '401':
           $ref: '#/components/responses/Respuesta401'
-        '403':
-          $ref: '#/components/responses/Respuesta403'
     post:
       tags:
       - RGPD
@@ -4775,7 +4781,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SolicitudRGPD'
+              $ref: '#/components/schemas/SolicitudRGPDCrear'
       responses:
         '201':
           description: Solicitud registrada. Se incluye Location.
@@ -4851,6 +4857,7 @@ paths:
                 estado:
                   type: string
                   enum:
+                  - en_tramite
                   - resuelta
                   - desestimada
                   examples:
@@ -4862,7 +4869,7 @@ paths:
                     el expediente docente.
               required:
               - estado
-              - resolucion
+              description: resolucion es obligatoria al resolver o desestimar; con en_tramite es opcional.
       responses:
         '200':
           description: Solicitud resuelta.
@@ -4901,6 +4908,26 @@ paths:
       security:
       - bearerAuth: []
       parameters:
+      - name: docente_id
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: alumno_id
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: tipo_dato
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - expediente_disciplinario
+          - convivencia
+          - retrasos_acumulados
+          - adaptacion_curricular
       - $ref: '#/components/parameters/PaginaParam'
       - $ref: '#/components/parameters/LimiteParam'
       responses:
@@ -5138,8 +5165,7 @@ paths:
       tags:
       - Google Calendar
       summary: Sincronizar horario y guardias con Google Calendar
-      description: 'Dispara la sincronización asíncrona hacia la cuenta corporativa
-        de Google Calendar del docente.
+      description: 'Sincroniza la cuenta de Google Calendar del docente (en la propia petición).
 
         Crea o actualiza los eventos de tramos lectivos, guardias asignadas y reuniones
         de departamento.
@@ -5149,7 +5175,7 @@ paths:
       security:
       - bearerAuth: []
       requestBody:
-        required: false
+        required: true
         content:
           application/json:
             schema:
@@ -5170,6 +5196,11 @@ paths:
                     type: integer
                     examples:
                     - 2
+                  eventos_eliminados:
+                    type: integer
+                    description: Eventos borrados de Google porque ya no están en la intranet.
+                    examples:
+                    - 1
                   mensaje:
                     type: string
                     examples:
@@ -5178,6 +5209,14 @@ paths:
           $ref: '#/components/responses/Respuesta401'
         '422':
           $ref: '#/components/responses/Respuesta422'
+        '409':
+          description: Ya hay una sincronización en marcha para este docente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetalle'
+        '503':
+          $ref: '#/components/responses/Respuesta503'
   /api/v1/calendario/eventos:
     get:
       tags:
@@ -5286,6 +5325,18 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorValidacion'
+    Respuesta429:
+      description: Demasiadas peticiones en poco tiempo. Hay que esperar antes de repetir.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDetalle'
+    Respuesta503:
+      description: Un servicio externo necesario (geocodificación, IA o Google) no responde o no está configurado.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDetalle'
   schemas:
     ErrorDetalle:
       type: object
@@ -6182,6 +6233,17 @@ components:
     PublicacionRrss:
       type: object
       properties:
+        solicitante_id:
+          type: string
+          examples:
+          - 660e1d8f1b2c3d4e5f6a7b8c
+        observaciones:
+          type:
+          - string
+          - 'null'
+          description: Observaciones del equipo de redes (las del PATCH).
+          examples:
+          - Publicado en Instagram a las 12:30.
         id:
           type: string
           examples:
@@ -7273,6 +7335,13 @@ components:
       type: object
       description: Incidencia de impuntualidad registrada por el profesorado.
       properties:
+        grupo:
+          type:
+          - string
+          - 'null'
+          description: Grupo del alumno. Lo usa el dashboard para agrupar los retrasos.
+          examples:
+          - 2º DAW
         id:
           type: string
           examples:
@@ -7338,6 +7407,13 @@ components:
     RetrasoCrear:
       type: object
       properties:
+        grupo:
+          type:
+          - string
+          - 'null'
+          description: Grupo del alumno. Lo usa el dashboard para agrupar los retrasos.
+          examples:
+          - 2º DAW
         alumno_id:
           type: string
           examples:
@@ -7833,6 +7909,11 @@ components:
       type: object
       description: Archivo documental institucional.
       properties:
+        nombre_archivo:
+          type: string
+          description: Nombre original del archivo, sin carpetas. Se usa como nombre de descarga.
+          examples:
+          - prog_dwes_2026.pdf
         id:
           type: string
           examples:
@@ -8601,6 +8682,19 @@ components:
       description: Seguimiento individual de alumno en FEM sobre el cómputo oficial
         de 500 horas.
       properties:
+        visitas:
+          type: array
+          description: Visitas de seguimiento anotadas con observaciones_visita, de la más antigua a la más reciente.
+          items:
+            type: object
+            properties:
+              fecha_hora:
+                type: string
+                format: date-time
+              docente_id:
+                type: string
+              observaciones:
+                type: string
         id:
           type: string
           examples:
@@ -8689,6 +8783,12 @@ components:
     AlumnoFEMCrear:
       type: object
       properties:
+        ciclo_nombre:
+          type:
+          - string
+          - 'null'
+          examples:
+          - 2º CFGS Desarrollo de Aplicaciones Web
         alumno_id:
           type: string
           examples:
@@ -8860,10 +8960,34 @@ components:
       description: Cuadro de mando integral con los 9 KPIs directivos obligatorios
         de la intranet.
       properties:
+        periodo:
+          type: object
+          description: Periodo de los cálculos. "Mes" es el mes natural en curso; el resto, desde el inicio del curso.
+          properties:
+            curso_academico:
+              type: string
+              examples:
+              - 2026/2027
+            desde_inicio_curso:
+              type: string
+              format: date
+              examples:
+              - '2026-09-01'
+            mes:
+              type: string
+              examples:
+              - 2026-11
         abandono_curso:
           type: object
           description: 'KPI 1: Tasa de abandono escolar agrupada por curso'
           properties:
+            disponible:
+              type: boolean
+              description: false mientras la intranet no tenga datos de matrícula y calificaciones.
+              examples:
+              - false
+            motivo:
+              type: string
             tasa_global_porcentaje:
               type: number
               examples:
@@ -8893,6 +9017,13 @@ components:
           type: object
           description: 'KPI 2: Rendimiento académico agregado por grupo formativo'
           properties:
+            disponible:
+              type: boolean
+              description: false mientras la intranet no tenga datos de matrícula y calificaciones.
+              examples:
+              - false
+            motivo:
+              type: string
             nota_media_centro:
               type: number
               examples:
@@ -9338,6 +9469,28 @@ components:
       - motivo_detalle
       - estado
       - fecha_solicitud
+    SolicitudRGPDCrear:
+      type: object
+      properties:
+        tipo_derecho:
+          type: string
+          enum:
+          - acceso
+          - rectificacion
+          - supresion
+          - oposicion
+          - limitacion
+          - portabilidad
+          examples:
+          - rectificacion
+        motivo_detalle:
+          type: string
+          minLength: 10
+          examples:
+          - Solicitud de corrección de número de teléfono de contacto.
+      required:
+      - tipo_derecho
+      - motivo_detalle
     PaginaSolicitudesRGPD:
       type: object
       properties:
@@ -9567,7 +9720,13 @@ components:
       - url_video
     SincronizarCalendarioRequest:
       type: object
+      required:
+      - google_access_token
       properties:
+        google_access_token:
+          type: string
+          description: Token de acceso de Google con permiso calendar.events, obtenido por el frontend con Google
+            Identity Services. El backend lo usa en esa petición y no lo guarda.
         incluir_guardias:
           type: boolean
           default: true
@@ -9581,6 +9740,9 @@ components:
     EventoCalendario:
       type: object
       properties:
+        recurrente:
+          type: boolean
+          description: true para los tramos semanales del horario; false para las guardias concretas.
         id:
           type: string
           examples:
